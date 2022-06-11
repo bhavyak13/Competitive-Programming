@@ -1,10 +1,10 @@
-// /*
-//     Author : Bhavya Kawatra
-//  Institute : MAIT
-//       Dept : CST
-//      Email : bhavyakawatra6@gmail.com
-//  CF handle : BhavyaKawatra13
-// */
+/*
+    Author : Bhavya Kawatra
+ Institute : MAIT
+      Dept : CST
+     Email : bhavyakawatra6@gmail.com
+ CF handle : BhavyaKawatra13
+*/
 // #include <bits/stdc++.h>
 // using namespace std;
 
@@ -78,6 +78,7 @@
 //         v[(a[i]%k)].pb(a[i]);
 //     }
 //     int ans=0;
+//     //iski jgh 2 pointers use krna tha !
 //     for(int i=k-1;i>=0;i--){
 //         for(int j=k-i;j<=i;j++){
 //             if(v[i].sz==0)continue;

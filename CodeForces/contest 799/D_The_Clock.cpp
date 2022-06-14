@@ -48,7 +48,7 @@ using namespace std;
 #define ffor(i, a, b) for (int i = a; i < b; i++)
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
-// #define int long long
+#define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
 void maxi(int &a, int &b){if (a > b){swap(a, b);}}
@@ -61,55 +61,63 @@ bool cmp(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
+
+
+
+auto fun(int a,int b,vector<string>&v){
+    // pt2(a,b);
+    int a1,a2,b1,b2;
+    a2=a%10;
+    if(a<=9)a1=0;
+    else{
+        a/=10;
+        a1=a%10;
+    }
+    b2=b%10;
+    if(b<=9)b1=0;
+    else{
+        b/=10;
+        b1=b%10;
+    }
+    // pt4(a1,a2,b1,b2);
+    string s="";
+    s.pb(a1+'0');
+    s.pb(a2+'0');
+    s.pb(b1+'0');
+    s.pb(b2+'0');
+    // pn(s);
+    vfor(v){
+        if(*i==s){return -1;}
+    }
+    v.pb(s);
+    if(a1==b2&&a2==b1){return 1;}
+    return 0;
+
+}
+
 void solve()
 {
-    in(v);
-    int e=v-1;
-    vector<vector<int>>g(v+1);
-    ffor(i,0,e){
-        in2(x,y);
-        g[x].pb(y);
-        g[y].pb(x);
-    }
-    vi ex(v+1,0);
-    queue<int>q;
-    q.push(1);
-    ex[1]=1;
-    vfor(g[1]){
-        q.push(*i);
-    }
-    while(!q.empty()){
-        if(q.sz>1){
-            int x=q.front();
-            q.pop();
-            int y=q.front();
-            q.pop();
-            ex[x]=1;
-            ex[y]=1;
-            if(g[x].sz>=g[y].sz){
-                //x->safe
-                vfor(g[y]){
-                    if(ex[*i]==0)q.push(*i);
-                }
-            }
-            else{
-                //y->safe
-                vfor(g[x]){
-                    if(ex[*i]==0)q.push(*i);
-                }
-            }
-        }else{
-            int x=q.front();
-            q.pop();
-            ex[x]=1;
-        }
-    }
+    string s;
+    cin>>s;
+    vector<string>v;
+    in(minu);
+    int hh=(s[1]-'0')+((s[0]-'0')*10);
+    int mm=(s[4]-'0')+((s[3]-'0')*10);
+    // pt2(hh,mm);
+
+
     int ans=0;
-    ffor(i,1,v+1){
-        if(ex[i]==0)ans++;
-        cout<<ex[i]<<" ";
-    }
-    cout<<endl;
+    ans+=fun(hh,mm,v);
+    do{
+        mm+=minu;
+        hh+=mm/60;
+        hh%=24;
+        mm%=60;
+        int d=fun(hh,mm,v);
+        if(d==1)ans++;
+        else if(d==-1)break;
+    }while(true);
+    // vfor(v){pt(*i);}
     pn(ans);
 }
 

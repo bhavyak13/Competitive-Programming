@@ -61,55 +61,37 @@ bool cmp(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
+
+auto fun(){}
+
 void solve()
 {
-    in(v);
-    int e=v-1;
-    vector<vector<int>>g(v+1);
-    ffor(i,0,e){
-        in2(x,y);
-        g[x].pb(y);
-        g[y].pb(x);
+    in2(n,needed);
+    vi a(n);
+    int n1=0;
+    ffor(i,0,n){cin>>a[i];if(a[i])n1++;}
+    if(needed>n1){pn(-1);return;}
+    vi adp(n+1,0);
+    ffor(i,1,n+1){
+        adp[i]=adp[i-1]+a[i-1];
     }
-    vi ex(v+1,0);
-    queue<int>q;
-    q.push(1);
-    ex[1]=1;
-    vfor(g[1]){
-        q.push(*i);
+    vi bdp(n+1,0);
+    for (int i = n-1 ; i >= 0; i--){
+        bdp[i]=bdp[i+1]+a[i];
     }
-    while(!q.empty()){
-        if(q.sz>1){
-            int x=q.front();
-            q.pop();
-            int y=q.front();
-            q.pop();
-            ex[x]=1;
-            ex[y]=1;
-            if(g[x].sz>=g[y].sz){
-                //x->safe
-                vfor(g[y]){
-                    if(ex[*i]==0)q.push(*i);
-                }
-            }
-            else{
-                //y->safe
-                vfor(g[x]){
-                    if(ex[*i]==0)q.push(*i);
-                }
-            }
-        }else{
-            int x=q.front();
-            q.pop();
-            ex[x]=1;
-        }
+    needed=n1-needed;
+    int i=0,j=needed;
+    int ans=n;
+    while(i<=needed){
+        int ta=0;
+        auto itr=lb(all(adp),i);
+        int indx=itr-adp.begin();
+        ta+=indx;
+        auto itr1=lb(bdp.rbegin(),bdp.rend(),j);
+        int indx1=itr1-bdp.rbegin();
+        ans=min(ans,indx+indx1);
+        i++;j--;
     }
-    int ans=0;
-    ffor(i,1,v+1){
-        if(ex[i]==0)ans++;
-        cout<<ex[i]<<" ";
-    }
-    cout<<endl;
     pn(ans);
 }
 

@@ -48,7 +48,7 @@ using namespace std;
 #define ffor(i, a, b) for (int i = a; i < b; i++)
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
-// #define int long long
+#define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
 void maxi(int &a, int &b){if (a > b){swap(a, b);}}
@@ -61,56 +61,37 @@ bool cmp(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
+
+auto fun(){}
+
 void solve()
 {
-    in(v);
-    int e=v-1;
-    vector<vector<int>>g(v+1);
-    ffor(i,0,e){
-        in2(x,y);
-        g[x].pb(y);
-        g[y].pb(x);
-    }
-    vi ex(v+1,0);
-    queue<int>q;
-    q.push(1);
-    ex[1]=1;
-    vfor(g[1]){
-        q.push(*i);
-    }
-    while(!q.empty()){
-        if(q.sz>1){
-            int x=q.front();
-            q.pop();
-            int y=q.front();
-            q.pop();
-            ex[x]=1;
-            ex[y]=1;
-            if(g[x].sz>=g[y].sz){
-                //x->safe
-                vfor(g[y]){
-                    if(ex[*i]==0)q.push(*i);
-                }
+    in(n);
+    vi a(n);
+    int dp[10]={0};
+    ffor(i,0,n){cin>>a[i];dp[a[i]%10]++;}
+    ffor(i,0,10){
+        if(dp[i]==0)continue;
+        ffor(j,0,10){
+            if(i==j&&dp[i]<=1)continue;
+            if(i!=j&&dp[j]<=0)continue;
+            int ts=i+j;
+            ts%=10;
+            int k=0;
+            if(ts>3){
+                k=13-ts;
+            }else if(ts<3){
+                k=3-ts;
             }
-            else{
-                //y->safe
-                vfor(g[x]){
-                    if(ex[*i]==0)q.push(*i);
-                }
-            }
-        }else{
-            int x=q.front();
-            q.pop();
-            ex[x]=1;
+            if(i==j&&k==i&&dp[k]>2){pn("YES");return;}
+            if(i!=j&&k==i&&dp[k]>1){pn("YES");return;}
+            if(i!=j&&k==j&&dp[k]>1){pn("YES");return;}
+            if(i!=j&&k!=i&&k!=j&&dp[k]>=1){pn("YES");return;}
         }
     }
-    int ans=0;
-    ffor(i,1,v+1){
-        if(ex[i]==0)ans++;
-        cout<<ex[i]<<" ";
-    }
-    cout<<endl;
-    pn(ans);
+    pn("NO");
+
+
 }
 
 /*-------------------------------------end-------------------------------------*/

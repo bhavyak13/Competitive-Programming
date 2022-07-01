@@ -74,36 +74,19 @@ void solve()
     int a[n];
     ffor(i,0,n)cin>>a[i];
     if(n==1){pn(M);return;}
-    int miniOd=im,minieven=im;
-    int moi=0,mei=0;
+    int smallest=im,smi=-1;
     ffor(i,0,n){
-        if(miniOd<a[i]){
-            miniOd=min(miniOd,a[i]);
-            moi=i;
+        if(a[i]<smallest){
+            smallest=a[i];
+            smi=i;
         }
-        if(i+1<n)
-            if(minieven<a[i+1]){
-                minieven=min(minieven,a[i+1]);
-                mei=i+1;
-            }
-        i++;
     }
-    if(n%2==0){
-        if(minieven>miniOd){
-            pn(J);
-        }
-        if(minieven==miniOd){
-            if(mei<moi)
-                pn(M);
-            else
-                pn(J);
-        }
-        else{
-            pn(M);
-        }
+    if(n%2!=0){
+        pn(M);
     }
     else{
-        pn(M);
+        if(smi%2==0)pn(J);
+        else pn(M);
     }
 }
 

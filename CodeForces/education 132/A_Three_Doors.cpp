@@ -1,4 +1,5 @@
 /*
+8:26
     Author : Bhavya Kawatra
  Institute : MAIT
       Dept : CST
@@ -68,25 +69,19 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    in(h);
+    vi a(4);
+    ffor(i,1,4)cin>>a[i];
+    vector<bool> dp(4,false);
+    dp[h]=T;
+    int e=3;
+    while(e--){
+        int temp=a[h];
+        dp[temp]=T;
+        h=temp;
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+    ffor(i,1,4){
+        if(!(dp[i])){pn(N);return;}
     }
     pn(Y);
 }

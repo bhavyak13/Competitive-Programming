@@ -64,29 +64,73 @@ int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
 
-auto fun(){}
+// main idea was tht
+/*
+Question:
+
+notice tht it was coming from an RBS (regular bracket sequnce)
+and from there some brackets have been marked as ? 
+Now you can to say if it is possible to get only 1 string (i.e string on which ? have been imposed) from 
+this ? wali string or 
+u can get multiple strings form this ? wali string
+
+Approach:
+
+notice if we replace first a question marks with '(' and
+remaining b question marks with ')' then we alwys get a rbs
+
+a-> number of opening brackets possible!
+b-> number of closing brackets possible!
+
+now we have to find is this rbs unique or not!
+
+so wht we can do is we swap the last opening bracket with first occurance of closing bracket
+and now we find if this is an rbs if it founds to be a rbs tht means atleast 1 rbs can be formed form this ? wali string 
+iwhich in turns means NO to unique RBS 
+and we got our ans;
+
+and if it not found to unique then it means only 1 rbs can be formed which in turn means 
+we get back our original string hence we simply print YES
+
+*/
+
+
+bool check(string s){
+    int bal=0;
+    for(auto i:s){
+        if(i=='(')bal++;
+        else bal--;
+        if(bal<0)return false;
+    }
+    return true;
+}
 
 void solve()
 {
-    in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    string s;
+    cin>>s;
+    int n=s.sz/2;
+    int o=0,c=0;
+    vi pos;
+    int i=0;
+    vfor(s){
+        if(*itr=='(')o++;
+        else if(*itr==')')c++;
+        else pos.pb(i);
+        i++;
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+    // we are checking for (( )( ))
+    o=n-o;
+    c=n-c;
+
+    for(int i=0;i<pos.size();i++){
+        if(i<o)s[pos[i]]='(';
+        else s[pos[i]]=')';
+    }
+
+    if(o>=1&&c>0){
+        swap(s[pos[o-1]],s[pos[o]]);
+        if(check(s)){pn(N);return;}
     }
     pn(Y);
 }

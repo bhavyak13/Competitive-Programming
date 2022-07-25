@@ -63,32 +63,19 @@ bool cmp(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
-
 auto fun(){}
-
 void solve()
 {
     in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
-    }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+    vi a(n);
+    ffor(i,0,n)cin>>a[i];
+    int mini=a[0];
+    // PS -> minimum should alwys be arr[0]
+    ffor(i,1,n){
+        if(a[i]%mini){pn(N);return;}
     }
     pn(Y);
+    
 }
 
 /*-------------------------------------end-------------------------------------*/

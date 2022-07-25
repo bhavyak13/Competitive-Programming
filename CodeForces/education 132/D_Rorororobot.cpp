@@ -6,7 +6,12 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 #define db double
 #define im INT_MAX
@@ -64,44 +69,70 @@ int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
 
+//segment tree
+vi a;
+vi seg;
+
+void preComp(int n){
+    a.resize(n);
+    seg.assign(4*n+1,0);
+}
+
+int build(int indx,int l,int r){
+    if(l==r) return seg[indx]=a[l];
+    int mid=(l+r)/2;
+    return seg[indx]=max(
+        build(2*indx+1, l, mid),
+        build(2*indx+2, mid+1, r)
+    );
+}
+
+int query(int indx,int low,int high,int l,int r){
+    
+    //completely lies
+    if(low>=l&&high<=r){
+        return seg[indx];
+    }
+    
+    //doesnt lies
+    if(low>r||high<l)
+        return INT_MIN;
+    
+    //overlaps
+    int mid=(low+high)/2;
+    return max(
+        query(2*indx+1,low,mid,l,r),//left
+        query(2*indx+2,mid+1,high,l,r)//right
+    );
+}
+
 auto fun(){}
 
 void solve()
 {
-    in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
-    }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
+    in2(n,m);
+    preComp(m);
+    ffor(i,0,m)cin>>a[i];
+    int maxPossibleHeight=n;
+    build(0,0,m-1);
+    in(q);
+    while(q--){
+        in4(rs,cs,rf,cf);
+        in(k);
+        if(abs(rf-rs)%k==0&&abs(cf-cs)%k==0){
+            cs--;cf--;
+            int maxHeightBlocked=query(0,0,m-1,min(cs,cf),max(cs,cf));
+            int reachableHeight=rs+((maxPossibleHeight-rs)/k)*k;
+            if(maxHeightBlocked<reachableHeight){pn(Y);continue;;}
         }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+        pn(N);
     }
-    pn(Y);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t;
-    cin>>t;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+    solve();
     return 0;
 }

@@ -69,24 +69,33 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
-    }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
+    string s;cin>>s;
+    bool operation1poss=false;
+    vector<char>currStr;
+    currStr.pb(s[0]);
+    int i=1;
+    while(i<n){
+        if(s[i]!=currStr[0]){
+            if(operation1poss){
+                currStr.pb(s[i++]);
+                operation1poss=F;
             }
-            i/=2;
+            else{
+                pn(N);return;
+            }
+            continue;
         }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+        int dest=currStr.sz;
+        if(dest+i>n){
+            pn(N);return;
+        }
+        vfor(currStr){
+            if(*itr!=s[i++]){pn(N);return;}
+        }
+        ffor(i,0,dest){
+            currStr.pb(currStr[i]);
+        }
+        operation1poss=true;
     }
     pn(Y);
 }

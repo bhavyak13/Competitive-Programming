@@ -68,40 +68,35 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    in2(n,q);
+
+    vi a(n);
+    ffor(i,0,n)cin>>a[i];
+
+    vi damage(n+1,0);
+    vi preDamage(n+1,0);
+
+    ffor(i,1,n) damage[i]=max(a[i-1]-a[i],(ll)0);
+    ffor(i,1,n) preDamage[i]=preDamage[i-1]+damage[i];
+
+    damage.assign(n+1,0);
+    vi dp(n+1,0);
+
+    bfor(i,n-1,0) damage[i]=max(a[i+1]-a[i],(ll)0);
+    bfor(i,n-1,0) dp[i]=dp[i+1]+damage[i];
+    
+    while(q--){
+        in2(x,y);
+        if(x<y) pn(preDamage[y-1]-preDamage[x-1]);
+        else pn(dp[y-1]-dp[x-1]);
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
-    }
-    pn(Y);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t;
-    cin>>t;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+
+    solve();
     return 0;
 }

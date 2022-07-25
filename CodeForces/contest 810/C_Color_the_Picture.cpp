@@ -6,7 +6,12 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 #define db double
 #define im INT_MAX
@@ -48,8 +53,8 @@ using namespace std;
 #define ffor(i, a, b) for (int i = a; i < b; i++)
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
-#define Y "YES" 
-#define N "NO" 
+#define Y "Yes" 
+#define N "No" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -68,27 +73,27 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    in3(n,m,k);
+    vi a(n);
+    ffor(i,0,k){
+        cin>>a[i];
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+    vi dp(k,0);
+    // maximum col tht can be colored by i th color
+    int ans=0;
+    int ec=0;
+    ffor(i,0,k){
+        dp[i]=a[i]/n;
+        // pt2(a[i],dp[i]);
+        if(dp[i])ans+=dp[i]/2;
+        ec+=dp[i]%2;
     }
-    pn(Y);
+    // cout<<endl;
+    // pt2(ans,ec);
+    if(ans*2>=m-2){
+        if(ans*2+ec>=m)pn(Y);
+    }
+    else pn(N);
 }
 
 /*-------------------------------------end-------------------------------------*/

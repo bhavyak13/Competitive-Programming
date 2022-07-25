@@ -64,6 +64,55 @@ int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
 
+/*
+lets see our tree is like this
+if not visualized see the problem statment pic
+ 1
+ 2
+3 4
+   5
+
+we have given a query to find if [....nodes] these nodes lie on a single path or not
+ex query : [2,3,4,5]
+our ans is we will find both the end points of this path (ans by seeing : 3 and 5)
+process :
+    What we will do is we will first find the deepest node 
+    here in this case it is 5 lets say it as right node.
+    how?
+        we can precompute hieght array. and return node with maximum height!
+    then we will find the other end of this patn lets call it as left (ans by seeing : 3)
+    how?
+        now this is interesting, we will find 
+                finalLca = lca(x,right) // ({x -> node in query array})
+        and we attach one condition with this which is it should not be equal to x
+        also we will maximise height of this lca to get the other end point i.e left
+
+        and if finalLca is equal to x in a certain case,
+            tht means they lie on same side, and we want other side thts why we are doin lca part
+            hence we ignore this and continue our search 
+        similarly by doing this for all query array we didnt get final lca then it means
+        tht complete path that is given to us is like a skewed tree.
+    Now so far we have calculated both end points so now we can move to our ans part
+    tht is telling where all these nodes belong to a single path or not
+
+    for evry node we will check where 
+        distance[left][x] + distnce[x][right] = distnce[left][right] //try to visualize it 
+        //where distnce[a][b] -> means diance btween node a and b
+    nd we xcan calculate this distnce using lca esily!
+
+    // this is distnce function written in line 170 
+    int dist(int node1,int node2){
+        int finalLca=lca(node1,node2);
+        int lcaHeight=height[finalLca];
+        int gap=height[node1]+height[node2]-2*lcaHeight;
+        return gap;
+    
+    and if for each node x 
+        distance[left][x] + distnce[x][right] = distnce[left][right] //try to visualize it 
+    this condition holds true then we can say that all the query array nodes lies 
+    in a single path!
+*/
+
 // lca of 2 nodes! 
 int timer,v,l;
 vvi g,prnt;
@@ -117,6 +166,7 @@ int lca(int vrtx1,int vrtx2){
     }
     return prnt[vrtx1][0];
 }
+
 int dist(int node1,int node2){
     int finalLca=lca(node1,node2);
     int lcaHeight=height[finalLca];

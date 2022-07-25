@@ -69,26 +69,25 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
-    }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
+    vi a(n);
+    int f=0;
+    int l=0;
+    ffor(i,0,n)cin>>a[i];
+    ffor(i,0,n){
+        if(a[i]==1){
+            f=i;
         }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
+        else if(a[i]==n){
+            l=i;
+        }
     }
-    pn(Y);
+    int ans=0;
+    ans+=(n-1-l);
+    ans+=(f);
+    if(l<f){
+        ans--;
+    }
+    pn(ans);
 }
 
 /*-------------------------------------end-------------------------------------*/

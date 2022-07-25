@@ -6,7 +6,12 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 #define db double
 #define im INT_MAX
@@ -69,26 +74,11 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    pt(n);
+    ffor(i,1,n){
+        pt(i);
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
-        }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
-    }
-    pn(Y);
+    cout<<endl;
 }
 
 /*-------------------------------------end-------------------------------------*/

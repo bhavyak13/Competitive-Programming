@@ -69,26 +69,26 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vi va(n),vb(n);
-    ffor(i,0,n)cin>>va[i];
-    ffor(i,0,n)cin>>vb[i];
-    map<int,int>a;
-    for(auto i:va){
-        while(!(i%2))i/=2;
-        a[i]++;
+    vi a(n);
+    map<int,int>m;
+    ffor(i,0,n){
+        cin>>a[i];
+        m[a[i]]++;
     }
-    dsort(vb);
-    for(auto i:vb){
-        while(i>=1){
-            if(a[i]>0){
-                break;
-            }
-            i/=2;
+    int maxi=*max_element(all(a));
+    int c=0;
+    bool ok=F;
+    for(auto i:m){
+        if(i.second==1){
+            c++;
+        }else if(i.ss%2){
+            ok=T;
         }
-        if(a[i]>0&&i)a[i]--;
-        else {pn(N);return;}
     }
-    pn(Y);
+    if(m[maxi]==1 && (!ok && c==1)){
+        c+=2;
+    }
+    pn((c+1)/2);
 }
 
 /*-------------------------------------end-------------------------------------*/

@@ -1,11 +1,8 @@
-/*
-    Author : Bhavya Kawatra
- Institute : MAIT
-      Dept : CST
-     Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
-*/
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
 
 #define db double
@@ -43,49 +40,53 @@ using namespace std;
 #define pt2(p,q) cout<<p<<" "<<q<<endl
 #define pt3(p,q,r) cout<<p<<" "<<q<<" "<<r<<endl
 #define pt4(p,q,r,s) cout<<p<<" "<<q<<" "<<r<<" "<<s<<endl
-#define vfor(v) for (auto i =v.begin() ; i!=v.end(); i++)
-#define vbfor(v) for (auto i =v.rbegin() ; i!=v.rend(); i++)
+#define vfor(v) for (auto itr =v.begin() ; itr!=v.end(); itr++)
+#define vbfor(v) for (auto itr =v.rbegin() ; itr!=v.rend(); itr++)
 #define ffor(i, a, b) for (int i = a; i < b; i++)
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
+#define Y "YES" 
+#define N "NO" 
 #define int long long
-int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
-int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
-void maxi(int &a, int &b){if (a > b){swap(a, b);}}
-int mymin(int a, int b, int c){int mini = min(a, c);return min(mini, b);}
-int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
-// first -> decreasing order && second -> increasing order
-bool compr(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
-//sort map by value //increasing order
-bool cmp(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
-int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
 
 void solve()
 {
-    in(n);
-    vector<int>v;
-    ffor(i,1,n+1){
-        v.pb(i);
+    int numrow,numcol,x,y;
+    cin >> numrow >> numcol >> x>>y;
+    in(d);
+    int ans=numrow+numcol-2;
+    bool ok=T;
+    int ur=x-d,nr=x+d;
+    int lc=y-d,rc=y+d;
+    if(ur<=1){
+        if(nr>=numrow)ok=F;
+        if(x==1&&y==1)ok=F;
+        if(lc<=1)ok=F;
     }
-    int itr=0;
-    while(v.sz>1){
-        itr+=1;
-        itr%=v.sz;
-        cout<<v[itr]<<" ";
-        v.erase(v.begin()+itr);
+    if(lc<=1){
+        if(rc>=numcol)ok=F;
+        if(x==1)ok=F;
     }
-    cout<<v[0];
+    if(nr>=numrow){
+        if(x==numrow&&y==numcol)ok=F;
+        if(rc>=numcol)ok=F;
+        if(y==numcol)ok=F;
+    }
+    if(rc>=numcol){
+        if(x==numrow)ok=F;
+    }
+    if(ok)pn(ans);
+    else pn(-1);
 }
- 
-
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t=1;
+    int t;
+    cin>>t;
     
     while(t--)
     {

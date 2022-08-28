@@ -6,7 +6,12 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 #define db double
 #define im INT_MAX
@@ -43,11 +48,13 @@ using namespace std;
 #define pt2(p,q) cout<<p<<" "<<q<<endl
 #define pt3(p,q,r) cout<<p<<" "<<q<<" "<<r<<endl
 #define pt4(p,q,r,s) cout<<p<<" "<<q<<" "<<r<<" "<<s<<endl
-#define vfor(v) for (auto i =v.begin() ; i!=v.end(); i++)
-#define vbfor(v) for (auto i =v.rbegin() ; i!=v.rend(); i++)
+#define vfor(v) for (auto itr =v.begin() ; itr!=v.end(); itr++)
+#define vbfor(v) for (auto itr =v.rbegin() ; itr!=v.rend(); itr++)
 #define ffor(i, a, b) for (int i = a; i < b; i++)
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
+#define Y "YES" 
+#define N "NO" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -62,35 +69,31 @@ int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 
 /*------------------------------------begin------------------------------------*/
 
+auto fun(){}
+
 void solve()
 {
     in(n);
-    vector<int>v;
-    ffor(i,1,n+1){
-        v.pb(i);
+    vi a(n);
+    ffor(i,0,n)cin>>a[i];
+    //dp[i] -> length of the longest increasing sequnce till indx i
+    int ans=1;
+    vector<int>dp(n+1,1);
+    for(int i=1;i<n;i++){
+        for(int j=1;j<i;j++){
+            if(a[i]>a[j])
+                dp[i]=max(dp[i],dp[j]+1);
+        }
+        ans=max(ans,dp[i]);
     }
-    int itr=0;
-    while(v.sz>1){
-        itr+=1;
-        itr%=v.sz;
-        cout<<v[itr]<<" ";
-        v.erase(v.begin()+itr);
-    }
-    cout<<v[0];
+    pn(ans);
 }
- 
-
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t=1;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+
+    solve();
     return 0;
 }

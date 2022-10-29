@@ -87,7 +87,31 @@ vector<int>factor(int n){
 /*------------------------------------begin------------------------------------*/
 
 auto fun(){}
-
+class Solution {
+public:
+    vector<int> secondGreaterElement(vector<int>& a) {
+        int n=a.size();
+        map<int,int>m;
+        multiset<int>s;
+        vector<int>ans;
+        for(int i=n-1;i>=0;i--){
+            int e=a[i];
+            m[e]=i;
+            auto itr=s.upper_bound(e);
+            bool ok=false;
+            if(itr!=s.end()){
+                itr=next(itr);
+                if(itr!=s.end()){
+                    ok=true;
+                    ans.push_back(*itr);
+                }
+            }
+            if(!ok)ans.push_back(-1);
+            s.insert(e);
+        }
+        return ans;
+    }
+};
 void solve()
 {
     vi a;

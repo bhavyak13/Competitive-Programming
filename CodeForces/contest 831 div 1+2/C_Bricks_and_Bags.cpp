@@ -6,15 +6,15 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <functional>
-using namespace __gnu_pbds;
 using namespace std;
-typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
+// #include <functional>
+// using namespace __gnu_pbds;
+// typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 //input full vector
-template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e : V)is >> e;return is;}
+// template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e : V)is >> e;return is;}
 
 #define db double
 #define im INT_MAX
@@ -60,47 +60,27 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define Y "YES" 
 #define N "NO" 
 #define int long long
-int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
-int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
-void maxi(int &a, int &b){if (a > b){swap(a, b);}}
-int mymin(int a, int b, int c){int mini = min(a, c);return min(mini, b);}
-int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
-// first -> decreasing order && second -> increasing order
-bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
-//sort map by value //increasing order
-bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
-int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
-struct cmp {constexpr bool operator()(pair<int, int> const& a,pair<int, int> const& b)const noexcept{return a.first > b.first;}};
-vector<int>factor(int n){
-    vector<int>ans;
-    if(!(n%2))ans.push_back(2);
-    while(!(n%2))n/=2;
-    for(int i=3;i*i<=n;i+=2){
-        if(n%i==0)ans.push_back(i);
-        while(n%i==0)n/=i;
-    }
-    if(n>1)ans.push_back(n);
-    return ans;
-}
 
 
 /*------------------------------------begin------------------------------------*/
-
-auto fun(){}
 
 void solve()
 {
     in(n);
     vi a(n);
-    cin>>a;
+    ffor(i,0,n)cin>>a[i];
     sort(all(a));
     int l=a[n-1],f=a[0];
-    int ans=l-f;
+    int fx=l-f,ans=l-f;
+    // 1 2 3 4 5 6
+    bfor(i,n-1,0){
+        ans=max(ans,fx+l-a[i]);
+        if(a[i]!=l)break;
+    }
+    // 5 1 _
     ffor(i,0,n){
-        int x=max(a[i]-f,l-a[i]);
-        int y=min(i?a[i]-a[i-1]:im,(i==n-1)?im:a[i+1]-a[i]);
-        ans=max(ans,x+y);
-        pt(ans);
+        ans=max(ans,fx+a[i]-f);
+        if(a[i]!=f)break;
     }
     pn(ans);
 }

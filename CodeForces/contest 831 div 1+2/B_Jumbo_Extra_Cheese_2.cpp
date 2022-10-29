@@ -90,17 +90,7 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    int a=0;
-    int ans=0;
-    ffor(i,0,n){
-        in2(x,y);
-        a=max(a,max(x,y));
-        ans+=(min(x,y));
-    }
-    ans*=2;
-    pn(ans+2*a);
-
+    vi a;
 }
 
 /*-------------------------------------end-------------------------------------*/
@@ -116,4 +106,4 @@ signed main()
     }
     
     return 0;
-}
+}s

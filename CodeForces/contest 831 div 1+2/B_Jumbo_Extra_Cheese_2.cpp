@@ -91,6 +91,26 @@ auto fun(){}
 void solve()
 {
     vi a;
+    int n=a.size();
+    map<int,int>m;
+    multiset<pair<int,int>>s;
+    vector<int>ans;
+    for(int i=n-1;i>=0;i--){
+        int e=a[i];
+        m[e]=i;
+        auto itr=s.upper_bound({e,0});
+        bool ok=false;
+        if(itr!=s.end()){
+            itr=next(itr);
+            if(itr!=s.end()){
+                ok=true;
+                ans.pb(m[e]);
+            }
+        }
+        if(!ok)ans.push_back(-1);
+        s.insert({e,i});
+    }
+    return ans;
 }
 
 /*-------------------------------------end-------------------------------------*/
@@ -106,4 +126,4 @@ signed main()
     }
     
     return 0;
-}s
+}

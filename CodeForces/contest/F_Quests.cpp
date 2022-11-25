@@ -86,21 +86,47 @@ vector<int>factor(int n){
 
 /*------------------------------------begin------------------------------------*/
 
-auto fun(){}
-
+vi pre;
+int n,c,d;
+bool fun(int k){
+    int ans=d/(k+1);
+    ans*=pre[min(n-1,k)];
+    int rem=(d%(k+1)-1);
+    if(rem>=0)ans+=pre[min(n-1,rem)];
+    // pt2(k,ans);
+    return ans>=c;
+}
 void solve()
 {
-    in(n);
-    int a=0;
-    int ans=0; 
-    ffor(i,0,n){
-        in2(x,y);
-        a=max(a,max(x,y));
-        ans+=(min(x,y));
+    string inf="Infinity",imp="Impossible";
+    cin>>n>>c>>d;
+    vi a(n);
+    cin>>a;
+    dsort(a);
+    //inf case 
+    int s=0;
+    ffor(i,0,min(n,d)){
+        s+=a[i];
     }
-    ans*=2;
-    pn(ans+2*a);
+    if(s>=c){
+        pn(inf);return;
+    }
+    //impo
+    if(d*a[0]<c){
+        pn(imp);return;
+    }
 
+    // max K
+    pre.assign(n+5,0);
+    pre[0]=a[0];
+    ffor(i,1,n)pre[i]=pre[i-1]+a[i];
+    int l=0,r=d;
+    while(r-l>1){
+        int mid=(l+r)>>1;
+        if(fun(mid))l=mid;
+        else r=mid;
+    }
+    pn(l);
 }
 
 /*-------------------------------------end-------------------------------------*/

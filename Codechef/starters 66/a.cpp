@@ -91,22 +91,51 @@ auto fun(){}
 void solve()
 {
     in(n);
-    int a=0;
-    int ans=0; 
+    vi a(n);
+    cin>>a;
+    int dp[32][32]{0};
+    int f[32]{0};
     ffor(i,0,n){
-        in2(x,y);
-        a=max(a,max(x,y));
-        ans+=(min(x,y));
+        int ok=-1;
+        ffor(j,0,31){
+            int b=(1<<j);
+            if((b&a[i])){
+                if(ok==-1){
+                    f[j]++;
+                    ok=j;
+                }
+                else{
+                    dp[ok][j]=1;
+                }
+            }
+        }
     }
-    ans*=2;
-    pn(ans+2*a);
-
+    vector<bool>valid(n,T);
+    ffor(i,0,32){
+        if(f[i])valid[i]=F;
+    }
+    int cost=0;
+    ffor(i,0,31){
+        if(!f[i])continue;
+        else if(f[i]!=1)cost+=(1<<i)*(f[i]-1);
+        ffor(j,i+1,31){
+            if(dp[i][j]&&f[j]){
+                valid[i]=T;
+                cost+=(1<<j);
+                valid[j]=T;
+            }
+        }
+        if(valid[i]||f[i]==n)continue;
+        pn(-1);return;
+    }
+    pn(cost);
+    
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
-    mahadev;
+    // mahadev;
     int t;
     cin>>t;
     

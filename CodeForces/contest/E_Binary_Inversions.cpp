@@ -90,16 +90,43 @@ auto fun(){}
 
 void solve()
 {
+    // 1 1 1 1 0 0 0 0
+    // 1 0 1 1 0 0 1 0
     in(n);
-    int a=0;
-    int ans=0; 
-    ffor(i,0,n){
-        in2(x,y);
-        a=max(a,max(x,y));
-        ans+=(min(x,y));
+    vi a(n);
+    cin>>a;
+    vi z(n+5),o(n+5);
+    // 1 -> 0 ans=isse phele kitne 1 hai -- isske baad kitne xero h
+    // 0 -> 1 isse phele kitne 1 h - iske baad kitne zero hai
+    // 1 -> iske baad kitne 0
+    // 0 -> isse phele kitne 1 h
+    o[0]=a[0];
+    for(int i=1;i<n;i++){
+        o[i]=o[i-1];
+        if(a[i])o[i]=o[i-1]+1;
     }
-    ans*=2;
-    pn(ans+2*a);
+    z[n-1]=1-a[n-1];
+    for(int i=n-2;i>=0;i--){
+        if(!a[i])z[i]=z[i+1]+1;
+        else z[i]=z[i+1];
+    }
+    int ans=0;
+    ffor(i,0,n){
+        if(a[i])ans+=z[i];
+    }
+    int x=0;
+    // 1 0 1 1 0 0 0 1
+    // 1 0 1 1 0 0 0 0
+
+    
+    ffor(i,0,n){
+        if(a[i]){
+            x=max(x,(i?o[i-1]:0)-z[i+1]);
+        }else{
+            x=max(x,z[i+1]-o[i]);
+        }
+    }
+    pn(ans+x);
 
 }
 

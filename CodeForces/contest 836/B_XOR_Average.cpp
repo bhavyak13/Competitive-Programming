@@ -6,15 +6,15 @@
  CF handle : BhavyaKawatra13
 */
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional>
+using namespace __gnu_pbds;
 using namespace std;
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// #include <functional>
-// using namespace __gnu_pbds;
-// typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
 
 //input full vector
-// template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e : V)is >> e;return is;}
+template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e : V)is >> e;return is;}
 
 #define db double
 #define im INT_MAX
@@ -59,51 +59,52 @@ using namespace std;
 #define all(v) v.begin(),v.end()
 #define Y "YES" 
 #define N "NO" 
-// #define int long long
+#define int long long
+int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
+int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
+void maxi(int &a, int &b){if (a > b){swap(a, b);}}
+int mymin(int a, int b, int c){int mini = min(a, c);return min(mini, b);}
+int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
+// first -> decreasing order && second -> increasing order
+bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
+//sort map by value //increasing order
+bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
+int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
+struct cmp {constexpr bool operator()(pair<int, int> const& a,pair<int, int> const& b)const noexcept{return a.first > b.first;}};
+vector<int>factor(int n){
+    vector<int>ans;
+    if(!(n%2))ans.push_back(2);
+    while(!(n%2))n/=2;
+    for(int i=3;i*i<=n;i+=2){
+        if(n%i==0)ans.push_back(i);
+        while(n%i==0)n/=i;
+    }
+    if(n>1)ans.push_back(n);
+    return ans;
+}
 
 
 /*------------------------------------begin------------------------------------*/
-/*
 
-2 | 3 12 | 25 27 28
-ans : 36
-2  25,27,28  3,12
-2 25 12
-
-2 3 | 12 25 27 | 28
-12 25 27 | 2 3 | 28
-12 | 3 | 28
-
-111|44455 | 5
-44455 | 111 | 5
-4 | 1 | 5
-
-1 | 2 3 3 | 5
-1 5 3 
-
-*/
+auto fun(){}
 
 void solve()
 {
     in(n);
-    vi a(n);
-    ffor(i,0,n)cin>>a[i];
-    sort(all(a));
-    int ans=0;
-    // keeping a[n-1] in ans alwys!
-    for(int i=0;i<n-2;i++){
-        // a[i+1] a[i] a[n-1]
-        int x=a[n-1]+a[i+1]-2*a[i];
-        ans=max(ans,x);
+    if(n%2){
+        ffor(i,0,n)pt(1);
+        cout<<endl;
+    }else{
+        if(n==2){
+            pt2(1,3);
+            return;
+        }
+        ffor(i,0,n-4)pt(n);
+        pt(1);
+        pt(n+1);
+        int d=3*n-2;
+        pt2(d/2,d/2);
     }
-    // keeping a[0] in ans alwys!
-    for(int i=1;i<n-1;i++){
-        //a[0] a[i+1] a[i]
-        int x=2*a[i+1]-a[i]-a[0];
-        ans=max(ans,x);
-    }
-    pn(ans);
-    
 }
 
 /*-------------------------------------end-------------------------------------*/

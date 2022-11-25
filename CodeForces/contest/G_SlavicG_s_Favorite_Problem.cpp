@@ -86,20 +86,53 @@ vector<int>factor(int n){
 
 /*------------------------------------begin------------------------------------*/
 
-auto fun(){}
+#define pi array<int,2>
+vvi g;
+unordered_map<int,int>val;
+map<pi,int>M;
+int B,A;
+void dfs(int root,int prnt,int X){
+    for(auto i:g[root]){
+        if(i!=prnt&&i!=A){
+            int nX=X^M[{min(root,i),max(root,i)}];
+            val[nX]++;
+            dfs(i,root,nX);
+        }
+    }
+}
+bool ans;
+void dfs2(int root,int prnt,int X){
+    for(auto i:g[root]){
+        if(i!=prnt){
+            if(i==B)continue;
+            int nX=X^M[{min(root,i),max(root,i)}];
+            if(val.find(nX)!=val.end())ans=T;
+            dfs2(i,root,nX);
+        }
+    }
+}
 
 void solve()
 {
-    in(n);
-    int a=0;
-    int ans=0; 
-    ffor(i,0,n){
-        in2(x,y);
-        a=max(a,max(x,y));
-        ans+=(min(x,y));
+    in3(n,a,b);
+    B=b;A=a;
+    g.assign(n+5,vi());
+    ffor(i,0,n-1){
+        in3(u,v,w);
+        g[u].pb(v);
+        g[v].pb(u);
+        M[{min(u,v),max(u,v)}]=w;
     }
-    ans*=2;
-    pn(ans+2*a);
+    dfs(b,-1,0);
+    for(auto i:val){
+        if(!i.ff&&i.ss){
+            pn(Y);return;
+        }
+    }
+    ans=false;
+    dfs2(a,-1,0);
+    if(ans)pn(Y);
+    else pn(N);
 
 }
 

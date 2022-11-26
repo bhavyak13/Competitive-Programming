@@ -86,35 +86,57 @@ vector<int>factor(int n){
 
 /*------------------------------------begin------------------------------------*/
 
-auto fun(){}
-bool isPrime(int n)
-{
-// Corner case
-if (n <= 1)return false;
-// Check from 2 to n-1
-for (int i = 2; i < n; i++)
-if (n % i == 0)
-return false;
-return true;
-}
+// a[x]=n
+// find multiples.. of n
+// n=12 x=3
+// 3 2 12 4 5 6 7 8 9 10 11 1 <- accordingly
+// 3 2 6 4 5 12 7 8 9 10 11  1
+// 1 2 3 4 5  6 7 8 9 10 11 12
+/*
+n=24
+x=3
+3 6 12 24
+*/
 void solve()
 {
     in2(n,x);
-    int N=n;
-    vi a(n);
+    vi a(n+5);
     ffor(i,0,n+1)a[i]=i;
     a[1]=x;
     a[n]=1;
-    int g=gcd(n,x);
-    if(g==1){
+    if(n%x){
         pn(-1);
         return;
-    }else {
-        //n= 32, x=
+    }else{
+        vi v;
+        int p=x;
+        for(int i=x+1;i<=n;i++){
+            if(!(n%i)&&!(i%p)){
+                v.pb(i);
+                p=i;
+            }
+        }
+        p=x;
+        for(auto i:v){
+            a[p]=i;
+            p=i;
+        }
+        ffor(i,1,n+1)pt(a[i]);
+        cout<<endl;
+
     }
+
 }
 
-/*-------------------------------------end-------------------------------------*/
+
+/*
+/*
+32 4 8 16
+2  4 8 16 
+4 8 16 32
+2 4 8 16
+
+-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;

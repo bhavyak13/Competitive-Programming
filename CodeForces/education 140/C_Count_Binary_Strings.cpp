@@ -21,9 +21,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define ll long long
 #define mod 1000000007
 #define vi vector<int>
-#define vb vector<bool>
 #define vvi vector<vi>
-#define vvb vector<vb>
 #define vp vector<pair<int,int>>
 #define pb push_back
 #define mp make_pair
@@ -85,6 +83,7 @@ vector<int>factor(int n){
     return ans;
 }
 
+int m=998244353;
 
 /*------------------------------------begin------------------------------------*/
 
@@ -93,39 +92,64 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
+    vvi v(n+5,vi(n+5,0));
+    ffor(i,0,n){
+        ffor(j,0,n-i){
+            cin>>v[i][j];
         }
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
+    vi dp(n+5,0);
+    int l=0;
+    for(int j=n-1;j>=0;j--){
+        for(int i=0;i<n-j;i++){
+            if(dp[j]){
+                if(!v[i][j])continue;
+                if(dp[j]!=v[i][j]){pn(0);return;}
+            }else dp[j]=v[i][j];
+        }
+        if(l==1&&dp[j]>l){
+            pn(0);return;
+        }
+        if(dp[j]==1)l=1;
+    }
+    if(dp[0]==2){pn(0);return;}
+    // pn(6);
+    int pow2=true,ans=0;
+    for(int i=0;i<n;i++){// %m 
+        if(dp[i]==0){
+            ans=ans*2;
+        }else if(dp[i]==1){
 
+        }
+    }
+    
+    
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t;
-    cin>>t;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+    solve();
     return 0;
 }
+
+
+/*
+
+1 2 3
+
+1-1 -> 1
+1-2 -> 0
+1-3 -> 2
+
+1 0 2
+_ 1 0
+_ _ 1
+
+
+
+
+
+
+*/

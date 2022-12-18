@@ -88,21 +88,33 @@ vector<int>factor(int n){
 
 auto fun(){}
 
+// codeforces
+// append any letter to end of string
+// copy any substring and append
+
+
 void solve()
 {
     in(n);
     string s;
     cin>>s;
-    int m=s.sz;
-    if(n>m){
-        pn(Y);return;
+    unordered_map<string,int>m;
+    for(int i=0;i<n-1;i++){
+        string t;
+        t+=s[i];
+        t+=s[i+1];
+        if(m.find(t)!=m.end()){
+            if(m[t]==i)continue;
+            pn(Y);return;
+        }else m[t]=i+1;
     }
+    pn(N);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
-    mahadev;
+    // mahadev;
     int t;
     cin>>t;
     

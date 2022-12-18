@@ -21,9 +21,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define ll long long
 #define mod 1000000007
 #define vi vector<int>
-#define vb vector<bool>
 #define vvi vector<vi>
-#define vvb vector<vb>
 #define vp vector<pair<int,int>>
 #define pb push_back
 #define mp make_pair
@@ -93,25 +91,8 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
-        }
-    }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
+    string s;
+    cin>>s;
 
 }
 
@@ -119,13 +100,11 @@ void solve()
 signed main()
 {
     mahadev;
-    int t;
-    cin>>t;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+    solve();
     return 0;
 }
+
+
+/*
+
+*/

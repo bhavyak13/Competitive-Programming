@@ -89,29 +89,49 @@ vector<int>factor(int n){
 /*------------------------------------begin------------------------------------*/
 
 auto fun(){}
+/*
+0 0 1
+1 1 3
 
+0 1 1
+lagatar 1 -> chances of winning of smaller number decreases
+
+1 1
+1 1 
+
+lagatar 0 -> chances of winning of greater number reduces
+
+           7/1 2/4  2/5   7/2       7/3
+str     ->  1   0   0     1         1       0
+ANS     ->  1   2   2     4         4      6
+jeetega ->  2 1/2 1/2 2/3/4/5  3/4/5/6   2/3/4/5/6/7
+3/1 3/2 
+            
+confirm winners -> 1,2,3,4,5,6
+             1/2/3/4/5/6
+        out-> 
+
+
+*/
 void solve()
 {
     in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
+    string s;
+    cin>>s;
+    n--;
+    int lastOne=(s[0]=='1');
+    int lastZero=(s[0]=='0');
+    pt(1);
+    ffor(i,1,n){
+        if(s[i]=='1'){
+            if(s[i]!=s[i-1]) lastOne=i+1;
+            pt(lastOne);
+        }else{
+            if(s[i]!=s[i-1]) lastZero=i+1;
+            pt(lastZero);
         }
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
+    cout<<endl;
 
 }
 
@@ -129,3 +149,6 @@ signed main()
     
     return 0;
 }
+
+
+

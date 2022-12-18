@@ -93,25 +93,26 @@ auto fun(){}
 void solve()
 {
     in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
+    string s;
+    cin>>s;
+    string a;
+    int ans=s[0]-'0';
+
+    ffor(i,1,n){
+        if(s[i]=='0'){
+            a+='+';
+        }else{
+            if(ans==1){
+                a+='-';
+                ans--;
             }
-        }
+            else{
+                ans=1;
+            a+='+';
+            } 
+        }   
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
+    pn(a);
 
 }
 

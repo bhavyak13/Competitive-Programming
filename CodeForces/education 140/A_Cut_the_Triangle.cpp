@@ -92,27 +92,17 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
-        }
+    in4(a,b,c,d);
+    in2(x,y);
+    if(a==c&&(y==d||y==b)){
+        pn(N);
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
-
+    else if(c==x&&(b==d||b==y)){
+        pn(N);
+    }else if(a==x&&(y==d||d==b)){
+        pn(N);
+    }
+    else pn(Y);
 }
 
 /*-------------------------------------end-------------------------------------*/

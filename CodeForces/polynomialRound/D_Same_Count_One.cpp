@@ -70,7 +70,7 @@ int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
 // first -> decreasing order && second -> increasing order
 bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
 //sort map by value //increasing order
-bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
+// bool cmp2(array<int,2>& a,array<int,2t>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 struct cmp {constexpr bool operator()(pair<int, int> const& a,pair<int, int> const& b)const noexcept{return a.first > b.first;}};
 vector<int>factor(int n){
@@ -92,26 +92,33 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
+    in2(n,m);
+    vvi a(n+5,vi(m+5,0));
+    vi ones(n+5,0);
+    int c=0;
+    ffor(i,0,n){
+        ffor(j,0,m){
+            cin>>a[i][j];
+            if(a[i][j]){
+                c++;
+                ones[i]++;
             }
         }
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
+    if(c%2){
+        pn(-1);return;
+    }
+    int val=c/n;
+    vector<array<int,3>>ans;
+    ffor(j,0,m){
+        vi ex,kam;
+        ffor(i,0,n){
+            if(!a[i][j]&&ones[i]<val)kam.pb(i);
+            else if(a[i][j]&&ones[i]>val)ex.pb(i);
+        }
+        int x,y=0;
+
+    }
 
 }
 

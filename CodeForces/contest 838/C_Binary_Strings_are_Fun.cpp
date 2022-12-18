@@ -19,7 +19,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define db double
 #define im INT_MAX
 #define ll long long
-#define mod 1000000007
+// #define mod 1000000007
 #define vi vector<int>
 #define vb vector<bool>
 #define vvi vector<vi>
@@ -89,30 +89,21 @@ vector<int>factor(int n){
 /*------------------------------------begin------------------------------------*/
 
 auto fun(){}
+int mod = 998244353;
 
 void solve()
 {
     in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
-        }
+    string s;
+    cin>>s;
+    int ans=1,t=1;
+    ffor(i,1,n){
+        if(s[i]==s[i-1]){
+            t=(t*2)%mod;
+        }else t=1;
+        ans=(ans+t)%mod;
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
-
+    pn(ans);
 }
 
 /*-------------------------------------end-------------------------------------*/

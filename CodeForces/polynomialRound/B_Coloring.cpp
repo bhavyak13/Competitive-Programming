@@ -90,29 +90,28 @@ vector<int>factor(int n){
 
 auto fun(){}
 
+/*
+1
+7 3 3
+3 1 3
+*/
+// _ _ _ | _ _ _ | _ _
+
 void solve()
 {
-    in(n);
-    vector<string>v;
-    string a,b;
-    cin>>a>>b;
-    v.push_back(a);
-    v.push_back(b);
-    vector<vector<int>>dp(2,vi(n+5,false));
-    // dp[i][j] -> return true if started from i,j you can reach column n
-    dp[0][n]=T;
-    dp[1][n]=T;
-    bfor(j,n,0){
-        ffor(i,0,2){
-            if(v[i][j]=='B'){
-                if(v[(i^1)][j]=='B')dp[i][j]=dp[(i^1)][j+1];
-                else dp[i][j]=dp[i][j+1];
-            }
+    in3(n,m,k);
+    vi a(m);
+    cin>>a;
+    sort(all(a));
+    int x=n/k;
+    int lastCapacity=n%k;
+    ffor(i,0,m){
+        if(a[i]>(x)){
+            if(a[i]-x==1&&lastCapacity)lastCapacity--;
+            else {pn(N);return;}
         }
     }
-    if(dp[0][0]||dp[1][0])pn(Y);
-    else pn(N);
-
+    pn(Y);
 }
 
 /*-------------------------------------end-------------------------------------*/

@@ -70,7 +70,7 @@ int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
 // first -> decreasing order && second -> increasing order
 bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
 //sort map by value //increasing order
-// bool cmp2(array<int,2>& a,array<int,2t>& b){return a.second < b.second;}
+bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 struct cmp {constexpr bool operator()(pair<int, int> const& a,pair<int, int> const& b)const noexcept{return a.first > b.first;}};
 vector<int>factor(int n){
@@ -86,59 +86,73 @@ vector<int>factor(int n){
 }
 
 
-/*------------------------------------begin------------------------------------*/
+/*------------------------------------begin------------------------------------
+    find x s.t.
+
+    |a[i]-x| <= |a[i+1]-x|
+
+case 1 : a[i] < a[i+1] -> 
+    eg a[i]=4, a[i+1]=9
+    x=1 3,8
+    x=2 2,7
+    x=3 1,6
+    x=4 0,5
+    x=5 1,4
+    x=6 2,3
+    4+9/2 -> 13/2 -> 6
+    if(a[i+1]=10) 4+10/2 -> 14/2 -> 7
+    floor value of (a[i]+a[i+1])/2
+    x can be maximum of 6 in this case, x:[0,6]
+    if it is greater than 6 then it wouldnt be inc anymore..
+
+case 2 : a[i] > a[i+1]
+    eg a[i]=10, a[i+1]=2
+    10,2
+1    9,1
+2    8,0
+3    7,1
+4    6,2
+5    5,3
+6    4,4...
+    5,3
+
+    eg a[i]=10, a[i+1]=1
+    10,1
+1    9,0
+2    8,1
+3    7,2
+4    6,3
+5    5,4
+6    4,5...
+
+x should be minimum ceil(10+1/2=11/2)=6
+x: [6,inf]
+
+*/
 
 auto fun(){}
 
 void solve()
 {
-    in2(n,m);
-    vvi a(n+5,vi(m+5,0));
-    vi ones(n+5,0);
-    int cnt=0;
-    ffor(i,0,n){
-        ffor(j,0,m){
-            cin>>a[i][j];
-            if(a[i][j]){
-                cnt++;
-                ones[i]++;
-            }
+    in(n);
+    vi a(n);
+    cin>>a;
+    int l=0,r=LONG_LONG_MAX;
+    for(int i=0;i<n-1;i++){
+        if(a[i]<a[i+1]){
+            int mx=(a[i]+a[i+1])/2;// [0,mx]
+            r=min(r,mx);
+        }else if(a[i]>a[i+1]){
+            int mn=(a[i]+a[i+1]+1)/2; //[mn,inf]
+            l=max(l,mn);
         }
     }
-    if(cnt%n){
-        pn(-1);return;
-    }
-    int val=cnt/n;
-    vector<array<int,3>>ans;
-    vi ex,kam;
-    ffor(i,0,n){
-        if(ones[i]<val)kam.pb(i);
-        else if(ones[i]>val)ex.pb(i);
-    }
-    int i=0,x=ex.sz;
-    int j=0;
-    int kamsz=kam.sz;
-    while(i<x){
-        j=j%kamsz;
-        int r1=ex[i],r2=kam[j];
-        for(int d=0;d<m&&(ones[r1]>val)&&(ones[r2]<val);d++){
-            if(a[r1][d]&&!a[r2][d]){
-                ones[r1]--;
-                a[r1][d]=0;
-                a[r2][d]=1;
-                ones[r2]++;
-                ans.pb({r1+1,r2+1,d+1});
-            }
-        }
-        if(ones[r1]==val)i++;
-        if(ones[r2]<=val)j++;
-    }
-    pn(ans.sz);
-    for(auto d:ans){
-        pt3(d[0],d[1],d[2]);
-    }
+    if(l<=r){
+        pn(l);
+    }else pn(-1);
 
 }
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {

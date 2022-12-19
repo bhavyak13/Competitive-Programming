@@ -70,7 +70,7 @@ int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
 // first -> decreasing order && second -> increasing order
 bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
 //sort map by value //increasing order
-// bool cmp2(array<int,2>& a,array<int,2t>& b){return a.second < b.second;}
+bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 struct cmp {constexpr bool operator()(pair<int, int> const& a,pair<int, int> const& b)const noexcept{return a.first > b.first;}};
 vector<int>factor(int n){
@@ -92,53 +92,28 @@ auto fun(){}
 
 void solve()
 {
-    in2(n,m);
-    vvi a(n+5,vi(m+5,0));
-    vi ones(n+5,0);
-    int cnt=0;
-    ffor(i,0,n){
-        ffor(j,0,m){
-            cin>>a[i][j];
-            if(a[i][j]){
-                cnt++;
-                ones[i]++;
-            }
+    int n=4;
+    vi a(n);
+    cin>>a;
+    ffor(i,0,4){
+        if(a[0]<a[2]&&a[0]<a[1]&&a[2]<a[3]&&a[1]<a[3]){
+            pn(Y);
+            return;
         }
+        int b=a[0];
+        int c=a[1];
+        int d=a[2];
+        int e=a[3];
+        // pt4(b,c,d,e);
+        a[0]=d;
+        a[1]=b;
+        a[2]=e;
+        a[3]=c;
     }
-    if(cnt%n){
-        pn(-1);return;
-    }
-    int val=cnt/n;
-    vector<array<int,3>>ans;
-    vi ex,kam;
-    ffor(i,0,n){
-        if(ones[i]<val)kam.pb(i);
-        else if(ones[i]>val)ex.pb(i);
-    }
-    int i=0,x=ex.sz;
-    int j=0;
-    int kamsz=kam.sz;
-    while(i<x){
-        j=j%kamsz;
-        int r1=ex[i],r2=kam[j];
-        for(int d=0;d<m&&(ones[r1]>val)&&(ones[r2]<val);d++){
-            if(a[r1][d]&&!a[r2][d]){
-                ones[r1]--;
-                a[r1][d]=0;
-                a[r2][d]=1;
-                ones[r2]++;
-                ans.pb({r1+1,r2+1,d+1});
-            }
-        }
-        if(ones[r1]==val)i++;
-        if(ones[r2]<=val)j++;
-    }
-    pn(ans.sz);
-    for(auto d:ans){
-        pt3(d[0],d[1],d[2]);
-    }
+    pn(N);
 
 }
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {

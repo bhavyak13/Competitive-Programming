@@ -122,74 +122,54 @@ for (int i = 2; i * i <= n; i++) {
 /*------------------------------------begin------------------------------------
 
 */
+vector<int> prnt;
+class DisjointSet{
+private:
+    vector<int> rank;
+public:
+    DisjointSet(int n){
+        rank.assign(n+1,0);
+        prnt.resize(n+1);
+        for(int i=0;i<=n;i++)prnt[i]=i;
+    }
+    int get(int x){
+        if(x==prnt[x])return x;
+        return prnt[x]=get(prnt[x]);
+    }
+    void merge(int x,int y){
+        x=get(x),y=get(y);
+        if(x==y)return;
+        if(rank[x]>rank[y])swap(x,y);
+        prnt[x]=y;  // y <- x
+        if(rank[x]==rank[y])rank[y]++;
+    }
+};
+auto fun(){}
 
-
-int n,m;
-bool ok(int x,int y){
-    return (x>=0&&x<n&&y>=0&&y<m);
-}
-int indx(int i,int j){
-    return i*m+j;
-}
 void solve()
 {
-    cin >> n >> m;
-    vector<string>a(n);
-    ffor(i,0,n)cin>>a[i];
-    vvi vis(n,vi(m,0));
-    vi prnt(n*m+5,-1);
-    int dx[]={0,0,1,-1};
-    int dy[]={1,-1,0,0};
-    ffor(i,0,n){
-        ffor(j,0,m){
-            if(a[i][j]=='A'){
-                priority_queue<ai,vector<ai>,cmparr>pq;
-                pq.push({0,indx(i,j)});
-                vis[i][j]=1;
-                while(!pq.empty()){
-                    auto z=pq.top();
-                    pq.pop();
-                    int dist=z[0];
-                    int ind=z[1];
-                    int x=ind/m,y=ind%m;
-                    if(a[x][y]=='B'){
-                        pn(Y);
-                        pn(dist);
-                        string ans;
-                        while(prnt[ind]!=-1){
-                            int P=prnt[ind];
-                            if(P+m==ind)ans.pb('D');
-                            else if(P-m==ind)ans.pb('U');
-                            else if(P+1==ind)ans.pb('R');
-                            else if(P-1==ind)ans.pb('L');
-                            ind=prnt[ind];
-                        }
-                        reverse(all(ans));
-                        pn(ans);
-                        return;
-                    }
-                    ffor(e,0,4){
-                        int nx=x+dx[e],ny=y+dy[e];
-                        if(ok(nx,ny)&&a[nx][ny]!='#'&&!vis[nx][ny]){
-                            pq.push({dist+1,indx(nx,ny)});
-                            vis[nx][ny]=1;
-                            prnt[indx(nx,ny)]=indx(x,y);
-                        }
-                    }
-                }
-                pn("NO");
-                return;
-            }
-        }
+    in2(n,m);
+    DisjointSet ds(n);
+    ffor(i,0,m){
+        in2(x,y);
+        ds.merge(x,y);
+    }
+    unordered_map<int,int>M;
+    for(int i=1;i<=n;i++){
+        M[ds.get(i)]++;
+    }
+    pn(M.sz-1);
+    int indx=0,last=-1;
+    for(auto i:M){
+        if(!indx){last=i.ff;indx++;}
+        else pt2(last,i.ff);
     }
 }
- 
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    
-        solve();
-    
+    solve();
     return 0;
 }

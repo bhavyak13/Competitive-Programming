@@ -123,46 +123,71 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-
+auto fun(){}
 int n,m;
-bool ok(int x,int y){
+bool ok(int&x,int&y){
     return (x>=0&&x<n&&y>=0&&y<m);
 }
-int indx(int i,int j){
-    return i*m+j;
+int indx(int&x,int&y){
+    return x*m+y;
 }
 void solve()
 {
-    cin >> n >> m;
+    cin>>n>>m;
     vector<string>a(n);
     ffor(i,0,n)cin>>a[i];
-    vvi vis(n,vi(m,0));
+    int dx[]={-1,1,0,0};
+    int dy[]={0,0,1,-1};
+    vvi dist(n+1,vi(m+1,im));
+    vvi dist2(n+1,vi(m+1,im));
+    queue<ai>q;
+    ffor(i,0,n){
+        ffor(j,0,m){
+            if(a[i][j]=='M'){
+                q.push({0,indx(i,j)});// min pq multi source bfs
+                dist[i][j]=0;
+            }
+        }
+    }
+    while(!q.empty()){
+        auto z=q.front();
+        q.pop();
+        int d=z[0];
+        int x=z[1]/m,y=z[1]%m;
+        if(dist[x][y]<d)continue;
+        ffor(e,0,4){
+            int nx=x+dx[e],ny=y+dy[e];
+            if(ok(nx,ny)&&a[nx][ny]=='.'){
+                if(dist[nx][ny]>d+1){
+                    dist[nx][ny]=d+1;
+                    q.push({d+1,indx(nx,ny)});
+                }
+            }
+        }
+    }
     vi prnt(n*m+5,-1);
-    int dx[]={0,0,1,-1};
-    int dy[]={1,-1,0,0};
     ffor(i,0,n){
         ffor(j,0,m){
             if(a[i][j]=='A'){
                 priority_queue<ai,vector<ai>,cmparr>pq;
                 pq.push({0,indx(i,j)});
-                vis[i][j]=1;
                 while(!pq.empty()){
                     auto z=pq.top();
                     pq.pop();
-                    int dist=z[0];
-                    int ind=z[1];
-                    int x=ind/m,y=ind%m;
-                    if(a[x][y]=='B'){
+                    int d=z[0];
+                    int x=z[1]/m,y=z[1]%m;
+                    if(!x||!y||x==n-1||y==m-1){
                         pn(Y);
-                        pn(dist);
+                        pn(d);
+                        int t=z[1];
                         string ans;
-                        while(prnt[ind]!=-1){
-                            int P=prnt[ind];
-                            if(P+m==ind)ans.pb('D');
-                            else if(P-m==ind)ans.pb('U');
-                            else if(P+1==ind)ans.pb('R');
-                            else if(P-1==ind)ans.pb('L');
-                            ind=prnt[ind];
+                        while(prnt[t]!=-1){
+                            int p=prnt[t];
+                            if(p+1==t)ans.pb('R');
+                            else if(p-1==t)ans.pb('L');
+                            else if(p+m==t)ans.pb('D');
+                            else ans.pb('U');
+                            t=p;
                         }
                         reverse(all(ans));
                         pn(ans);
@@ -170,26 +195,25 @@ void solve()
                     }
                     ffor(e,0,4){
                         int nx=x+dx[e],ny=y+dy[e];
-                        if(ok(nx,ny)&&a[nx][ny]!='#'&&!vis[nx][ny]){
-                            pq.push({dist+1,indx(nx,ny)});
-                            vis[nx][ny]=1;
-                            prnt[indx(nx,ny)]=indx(x,y);
+                        if(ok(nx,ny)&&a[nx][ny]=='.'&&dist[nx][ny]>d+1){
+                            if(dist2[nx][ny]>d+1){
+                                dist2[nx][ny]=d+1;
+                                prnt[indx(nx,ny)]=indx(x,y);
+                                pq.push({d+1,indx(nx,ny)});
+                            }
                         }
                     }
                 }
-                pn("NO");
-                return;
             }
         }
     }
+    pn(N);
 }
- 
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    
-        solve();
-    
+    solve();
     return 0;
 }

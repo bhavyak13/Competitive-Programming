@@ -61,7 +61,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
 #define Y "YES" 
-#define N "NO" 
+#define N "IMPOSSIBLE" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -123,73 +123,53 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
+auto fun(){}
 
-int n,m;
-bool ok(int x,int y){
-    return (x>=0&&x<n&&y>=0&&y<m);
-}
-int indx(int i,int j){
-    return i*m+j;
-}
 void solve()
 {
-    cin >> n >> m;
-    vector<string>a(n);
-    ffor(i,0,n)cin>>a[i];
-    vvi vis(n,vi(m,0));
-    vi prnt(n*m+5,-1);
-    int dx[]={0,0,1,-1};
-    int dy[]={1,-1,0,0};
-    ffor(i,0,n){
-        ffor(j,0,m){
-            if(a[i][j]=='A'){
-                priority_queue<ai,vector<ai>,cmparr>pq;
-                pq.push({0,indx(i,j)});
-                vis[i][j]=1;
-                while(!pq.empty()){
-                    auto z=pq.top();
-                    pq.pop();
-                    int dist=z[0];
-                    int ind=z[1];
-                    int x=ind/m,y=ind%m;
-                    if(a[x][y]=='B'){
-                        pn(Y);
-                        pn(dist);
-                        string ans;
-                        while(prnt[ind]!=-1){
-                            int P=prnt[ind];
-                            if(P+m==ind)ans.pb('D');
-                            else if(P-m==ind)ans.pb('U');
-                            else if(P+1==ind)ans.pb('R');
-                            else if(P-1==ind)ans.pb('L');
-                            ind=prnt[ind];
-                        }
-                        reverse(all(ans));
-                        pn(ans);
-                        return;
-                    }
-                    ffor(e,0,4){
-                        int nx=x+dx[e],ny=y+dy[e];
-                        if(ok(nx,ny)&&a[nx][ny]!='#'&&!vis[nx][ny]){
-                            pq.push({dist+1,indx(nx,ny)});
-                            vis[nx][ny]=1;
-                            prnt[indx(nx,ny)]=indx(x,y);
-                        }
-                    }
-                }
-                pn("NO");
-                return;
+    in2(n,m);
+    vvi g(n+1,vi());
+    vi vis(n+1,0);
+    vi prnt(n+1,-1);
+    ffor(i,0,m){
+        in2(x,y);
+        g[x].pb(y);
+        g[y].pb(x);
+    }
+    priority_queue<ai,vector<ai>,cmparr>pq;
+    pq.push({1,1});
+    vis[1]=1;
+    while(!pq.empty()){
+        auto x=pq.top();
+        pq.pop();
+        int dist=x[0];
+        int r=x[1];
+        if(r==n){
+            pn(dist);
+            vi ans;
+            while(r!=-1){
+                ans.pb(r);
+                r=prnt[r];
             }
+            reverse(all(ans));
+            for(auto i:ans)pt(i);
+            cout<<endl;
+            return;
+        }
+        for(auto i:g[r]){
+            if(vis[i])continue;
+            vis[i]=1;
+            pq.push({dist+1,i});
+            prnt[i]=r;
         }
     }
+    pn(N);
 }
- 
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    
-        solve();
-    
+    solve();
     return 0;
 }

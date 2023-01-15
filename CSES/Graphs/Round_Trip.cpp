@@ -124,72 +124,61 @@ for (int i = 2; i * i <= n; i++) {
 */
 
 
-int n,m;
-bool ok(int x,int y){
-    return (x>=0&&x<n&&y>=0&&y<m);
-}
-int indx(int i,int j){
-    return i*m+j;
+// detect cycle in directed graph..
+vector<int>vis,tvis,temp;
+vvi g;
+
+bool dfs(int r,int prnt){
+    tvis[r]=1;
+    vis[r]=1;
+    temp.pb(r);
+    for(auto i:g[r]){
+        if(i==prnt)continue;
+        if(tvis[i]==1){//cycle detected
+            temp.pb(i);
+            return false;
+        }else if(!vis[i])if(!dfs(i,r))return false;
+    }
+    tvis[r]=0;
+    temp.pop_back();
+    return true;
 }
 void solve()
 {
-    cin >> n >> m;
-    vector<string>a(n);
-    ffor(i,0,n)cin>>a[i];
-    vvi vis(n,vi(m,0));
-    vi prnt(n*m+5,-1);
-    int dx[]={0,0,1,-1};
-    int dy[]={1,-1,0,0};
-    ffor(i,0,n){
-        ffor(j,0,m){
-            if(a[i][j]=='A'){
-                priority_queue<ai,vector<ai>,cmparr>pq;
-                pq.push({0,indx(i,j)});
-                vis[i][j]=1;
-                while(!pq.empty()){
-                    auto z=pq.top();
-                    pq.pop();
-                    int dist=z[0];
-                    int ind=z[1];
-                    int x=ind/m,y=ind%m;
-                    if(a[x][y]=='B'){
-                        pn(Y);
-                        pn(dist);
-                        string ans;
-                        while(prnt[ind]!=-1){
-                            int P=prnt[ind];
-                            if(P+m==ind)ans.pb('D');
-                            else if(P-m==ind)ans.pb('U');
-                            else if(P+1==ind)ans.pb('R');
-                            else if(P-1==ind)ans.pb('L');
-                            ind=prnt[ind];
-                        }
-                        reverse(all(ans));
-                        pn(ans);
-                        return;
-                    }
-                    ffor(e,0,4){
-                        int nx=x+dx[e],ny=y+dy[e];
-                        if(ok(nx,ny)&&a[nx][ny]!='#'&&!vis[nx][ny]){
-                            pq.push({dist+1,indx(nx,ny)});
-                            vis[nx][ny]=1;
-                            prnt[indx(nx,ny)]=indx(x,y);
-                        }
-                    }
-                }
-                pn("NO");
-                return;
+    in2(n,m);
+    g.assign(n+1,vi());
+    vis.assign(n+1,0);
+    tvis.assign(n+1,0);
+    ffor(i,0,m){
+        in2(x,y);
+        g[x].pb(y);
+        g[y].pb(x);
+    }
+    ffor(i,1,n+1){
+        if(!vis[i]&&!dfs(i,-1)){
+            vi ans;
+            int e=temp.back();
+            temp.pop_back();
+            while(temp.back()!=e){
+                ans.pb(temp.back());
+                temp.pop_back();
             }
+            pn(ans.sz+2);
+            pt(temp.back());
+            for(auto i:ans)pt(i);
+            pt(temp.back());
+            return;
         }
     }
+    pn("IMPOSSIBLE");
+
+
 }
- 
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    
-        solve();
-    
+    solve();
     return 0;
 }

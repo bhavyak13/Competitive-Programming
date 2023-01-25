@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -123,59 +123,55 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
-
-void dfs(int r){
-    vis[r]=1;
+vvi g;
+vi v;
+int dfs(int r,int prnt){
+    int c=1;
+    map<int,int>m;
     for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
-void solve()
-{
-    in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
-    ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+        if(i!=prnt){
+            int x=dfs(i,r);
+            m[x]++;
+            c+=x;
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    v[r]=c;
+    return c;
+}
+
+void solve()
+{
+    in(n);
+    g.assign(n+5,vi());
+    v.assign(n+5,0);
+    ffor(i,0,n-1){
+        in2(x,y);
+        g[x].pb(y);
+        g[y].pb(x);
+    }
+    dfs(1,-1);
+    vi ans(n+1,0);
+    ffor(i,1,n+1){
+        ans[v[i]]++;
+        ans[n-v[i]]++;
+    }
+    ffor(i,1,n){
+        pt(((ans[i])?1:0));
+    }
+    pn(0);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    solve();
+    int t;
+    cin>>t;
+    
+    while(t--)
+    {
+        solve();
+    }
+    
     return 0;
 }

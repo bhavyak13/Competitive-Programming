@@ -123,59 +123,46 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
-
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
 void solve()
 {
-    in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    in3(n,m,k);
+    vector<vector<ai>>g(n+1,vector<ai>());
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,cost);
+        g[x].pb({y,cost});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+    priority_queue<ai,vector<ai>,cmparr>pq;//cost,indx
+    vector<priority_queue<int>>cost(n+1,priority_queue<int>());
+    cost[1].push(0);
+    pq.push({0,1});
+    while(!pq.empty()){
+        auto x=pq.top();
+        pq.pop();
+        int dist=x[0],r=x[1];
+        // if(r==n&&cost[n].sz==k)break;
+        for(auto i:g[r]){
+            int tempCost=dist+i[1],vertx=i[0];
+            if(cost[vertx].empty()||cost[vertx].top()>tempCost||cost[vertx].sz<k){
+                cost[vertx].push({tempCost});
+                while(cost[vertx].sz>k)cost[vertx].pop();
+                pq.push({tempCost,vertx});
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    vi ans;
+    while(!cost[n].empty()){
+        ans.pb(cost[n].top());
+        cost[n].pop();
+    }
+    reverse(all(ans));
+    for(auto i:ans)pt(i);
+
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
-    mahadev;
+    // mahadev;
     solve();
     return 0;
 }

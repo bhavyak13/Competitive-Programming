@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -76,6 +76,7 @@ bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
 #define ai array<int,2>
+#define ai3 array<int,3>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>factor(int n){
@@ -123,53 +124,57 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
+
+
+class DisjointSet{
+private:
+    vector<int> Siz;
+    vector<int> prnt;
+public:
+    DisjointSet(int n){
+        Siz.assign(n+1,1);
+        prnt.resize(n+1);
+        for(int i=0;i<=n;i++)prnt[i]=i;
     }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
+    int get(int x){
+        if(x==prnt[x])return x;
+        return prnt[x]=get(prnt[x]);
     }
-}
+    void merge(int x,int y){
+        x=get(x),y=get(y);
+        if(x==y)return;
+        if(Siz[x]>Siz[y])swap(x,y);
+        prnt[x]=y;  // y <- x
+        Siz[y]+=Siz[x];
+    }
+};
+
+auto fun(){}
+
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    int ans=0;
+    DisjointSet ds(n);
+    vector<ai3>ed;
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,cost);
+        ed.pb({cost,x,y});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+    sort(all(ed));
+    for(auto &i:ed){
+        int cost=i[0],u=i[1],v=i[2];
+        if(ds.get(u)!=ds.get(v)){
+            ds.merge(u,v);
+            ans+=cost;
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    int e=ds.get(1);
+    ffor(i,1,n+1){
+        if(e!=ds.get(i)){pn("IMPOSSIBLE");return;}
+    }
+    pn(ans);
 }
 
 /*-------------------------------------end-------------------------------------*/

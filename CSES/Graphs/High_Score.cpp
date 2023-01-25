@@ -75,7 +75,7 @@ bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 // priority_queue of pairs (min) 
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
-#define ai array<int,2>
+#define ai array<int,3>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>factor(int n){
@@ -104,8 +104,6 @@ int binExpo(int a,int b){
 // So we use Modular Multiplicative Inverse, i.e (A / B) % mod = A * ( B ^ -1 ) % mod
 // for prime modulus m : (a^(m-2) = a^-1) mod m
 int inv(int a){return binExpo(a,mod-2);}
-
-
 // Sieve of Eratosthenes
 /*
 int n;
@@ -120,56 +118,82 @@ for (int i = 2; i * i <= n; i++) {
 */
 
 /*------------------------------------begin------------------------------------
+ 
+idea : 
+
+Apply bellman ford and analyze which all nodes are included in the cycle
+
+if any node that is included in cycle is reachable by 1 then
+check if that node can lead to N or not
+if it can take us to N then N is also involved in cycle somehow..
+hence ans = -1.
+
+to check if it is reachable by 1 or not we did a single souce dfs from 1 
+and make reacheable[node]=1
+
+then from each reachable node if that is included in cycle, we checked whether
+form that reachable node we can reach N or not , if yes ANS=-1;
+else dist[N] is returned!!
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+auto fun(){}
+
+vi vis,scammers,reach;
+vector<vector<ai>>g;
 
 void dfs(int r){
+    scammers[r]=1;
     vis[r]=1;
     for(auto i:g[r]){
-        if(!vis[i])dfs(i);
+        scammers[i[0]]=1;
+        if(vis[i[0]])continue;
+        dfs(i[0]);
     }
-    st.pb(r);
 }
 void dfs2(int r){
     vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
+    reach[r]=1;
+    for(auto i:g[r]){
+        if(!vis[i[0]])
+        dfs2(i[0]);
     }
 }
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vector<ai>ed;
+    g.assign(n+1,vector<ai>());
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,wt);
+        ed.pb({x,y,wt});
+        g[x].pb({y,wt});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+    // bellman ford algorithm
+    vi dist(n+1,-1e18);
+    dist[1]=0;
+    ffor(i,0,n-1){
+        for(auto i:ed){
+            dist[i[1]]=max(dist[i[1]],dist[i[0]]+i[2]);
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    vi dist2=dist;
+    ffor(i,0,n-1){
+        for(auto i:ed){
+            dist2[i[1]]=max(dist2[i[1]],dist2[i[0]]+i[2]);
+        }
+    }
+    vis.assign(n+1,0);
+    scammers.assign(n+1,0);
+    reach.assign(n+1,0);
+    dfs2(1);
+    vis.assign(n+1,0);
+    ffor(i,0,n){
+        if(reach[i]&&dist[i]<dist2[i]&&!vis[i]){
+            dfs(i);
+        }
+    }
+    pn((scammers[n]?-1:dist[n]));
 }
 
 /*-------------------------------------end-------------------------------------*/

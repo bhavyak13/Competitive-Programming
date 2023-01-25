@@ -61,7 +61,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
 #define Y "YES" 
-#define N "NO" 
+#define N "IMPOSSIBLE" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -123,53 +123,38 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
-
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
+auto fun(){}
+// Kahn's Algorithm
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vvi g(n+1,vi());
+    vi ind(n+1,0);
     ffor(i,0,m){
         in2(x,y);
+        ind[y]++;
         g[x].pb(y);
-        rg[y].pb(x);
     }
+    vi topo;
+    queue<int>q;
     ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
+        if(!ind[i])q.push(i);
     }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+    while(!q.empty()){
+        auto x=q.front();
+        q.pop();
+        topo.pb(x);
+        for(auto i:g[x]){
+            ind[i]--;
+            if(!ind[i])q.push(i);
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    ffor(i,1,n+1){
+        if(ind[i]){
+            pn(N);return;
+        }
+    }
+    for(auto i:topo)pt(i);
 }
 
 /*-------------------------------------end-------------------------------------*/

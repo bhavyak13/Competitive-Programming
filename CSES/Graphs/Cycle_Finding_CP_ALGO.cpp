@@ -123,53 +123,61 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+auto fun(){}
+struct Edge {
+    int a, b, cost;
+};
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
+int n, m;
+vector<Edge> edges;
+const int INF = 1000000000;
+
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vector<Edge>edges;
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(a,b,c);
+        struct Edge E;
+        E.a=a-1;
+        E.b=b-1;
+        E.cost=c;
+        edges.pb(E);
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+    vector<int> d(n);
+    vector<int> p(n, -1);
+    int x;
+    for (int i = 0; i < n; ++i) {
+        x = -1;
+        for (Edge e : edges) {
+            if (d[e.a] + e.cost < d[e.b]) {
+                d[e.b] = d[e.a] + e.cost;
+                p[e.b] = e.a;
+                x = e.b;
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+
+    if (x == -1) {
+        cout << "NO\n";
+    } else {
+        for (int i = 0; i < n; ++i){
+            x=p[x];
+        }
+
+        vector<int> cycle;
+        for (int v = x;; v = p[v]) {
+            cycle.push_back(v);
+            if (v == x && cycle.size() > 1)
+                break;
+        }
+        reverse(cycle.begin(), cycle.end());
+
+        cout << "YES\n";
+        for (int v : cycle)
+            cout << v+1 << ' ';
+        cout << endl;
+    }
 }
 
 /*-------------------------------------end-------------------------------------*/

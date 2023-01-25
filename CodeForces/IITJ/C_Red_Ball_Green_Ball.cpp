@@ -123,59 +123,53 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+vi a;
+vi ones,zeroes;
+int n,k;
+int dp[105][105];
+int fun(int indx,int rem){
+    int ans=im;
+    if(indx==n)return ans;
+    if(rem==1){
+        int cost=(ones[n]-ones[indx])*(zeroes[n]-zeroes[indx]);
+        return cost;
+    }
+    if(dp[indx][rem]!=-1)return dp[indx][rem];
+    for(int i=indx+1;i<n;i++){// i check
+        int cost=(ones[i]-ones[indx])*(zeroes[i]-zeroes[indx]);
+        int c=fun(i,rem-1)+cost;
+        ans=min(ans,c);
+    }
+    return dp[indx][rem]=ans;
+}
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
 void solve()
 {
-    in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
-    ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
+    mem(dp,-1);
+    cin>>n>>k;
+    a.assign(n,0);
+    ones.assign(n+5,0);
+    zeroes.assign(n+5,0);
+    cin>>a;
     ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
+        ones[i]=ones[i-1]+(a[i-1]==1);
+        zeroes[i]=zeroes[i-1]+(a[i-1]==0);
     }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
-        }
-    }
-    ffor(i,1,n+1)pt(ans[i]);
+    int x=fun((ll)0,k);
+    pn(x);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    solve();
+    int t;
+    cin>>t;
+    
+    while(t--)
+    {
+        solve();
+    }
+    
     return 0;
 }

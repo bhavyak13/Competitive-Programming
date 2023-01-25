@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -123,53 +123,47 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+class DisjointSet{
+private:
+    vector<int> prnt;
+    vector<int> Siz;
+public:
+    int mx;
+    DisjointSet(int n){
+        Siz.assign(n+1,1);
+        prnt.resize(n+1);
+        for(int i=0;i<=n;i++)prnt[i]=i;
+        mx=1;
+    }
+    int get(int x){
+        if(x==prnt[x])return x;
+        return prnt[x]=get(prnt[x]);
+    }
+    void merge(int x,int y){
+        x=get(x),y=get(y);
+        if(x==y)return;
+        if(Siz[x]>Siz[y])swap(x,y);
+        prnt[x]=y;  // y <- x
+        Siz[y]+=Siz[x];
+        mx=max(mx,Siz[y]);
+    }
+};
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
+auto fun(){}
+
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
-    ffor(i,0,m){
+    DisjointSet ds(n);
+    int num=n;
+    while(m--){
         in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+        if(ds.get(x)!=ds.get(y)){
+            ds.merge(x,y);
+            num--;
         }
+        pt2(num,ds.mx);
     }
-    ffor(i,1,n+1)pt(ans[i]);
 }
 
 /*-------------------------------------end-------------------------------------*/

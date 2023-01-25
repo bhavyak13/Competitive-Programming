@@ -72,22 +72,26 @@ int mymax(int a, int b, int c){int big = max(a, c);return max(big, b);}
 bool cmp1(const pair<int, int> &i1, const pair<int, int> i2){if (i1.first > i2.first)return true;if (i1.first == i2.first)return i1.second < i2.second;return false;}
 //sort vector by second value //increasing order
 bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
+
 // priority_queue of pairs (min) 
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
-#define ai array<int,2>
+
+
+#define ai array<int,3>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
+
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>factor(int n){
-    vector<int>ans;
-    if(!(n%2))ans.push_back(2);
+    vector<int>cycle;
+    if(!(n%2))cycle.push_back(2);
     while(!(n%2))n/=2;
     for(int i=3;i*i<=n;i+=2){
-        if(n%i==0)ans.push_back(i);
+        if(n%i==0)cycle.push_back(i);
         while(n%i==0)n/=i;
     }
-    if(n>1)ans.push_back(n);
-    return ans;
+    if(n>1)cycle.push_back(n);
+    return cycle;
 }
 
 // MODULO operations: 
@@ -123,53 +127,42 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+vector<int>vis,tvis;
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vector<ai>ed;
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,wt);
+        ed.pb({x,y,wt});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+    vector<int>dist(n+1,im);
+    vector<int>prnt(n+1,-1);
+    int r;
+    ffor(x,0,n){
+        r=-1;
+        for(auto i:ed){
+            if(dist[i[1]]>dist[i[0]]+i[2]){
+                dist[i[1]]=dist[i[0]]+i[2];
+                prnt[i[1]]=i[0];
+                r=i[1];
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    if(r==-1)pn(N);
+    else{
+        pn(Y);
+        ffor(i,0,n)r=prnt[r];
+        vi cycle;
+        for(int v=r;;v=prnt[v]){
+            cycle.pb(v);
+            if(cycle.sz>1&&v==r)break;
+        }
+        reverse(all(cycle));
+        for(auto i:cycle)pt(i);
+    }
+
 }
 
 /*-------------------------------------end-------------------------------------*/

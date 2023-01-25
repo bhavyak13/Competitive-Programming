@@ -75,7 +75,8 @@ bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 // priority_queue of pairs (min) 
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
-#define ai array<int,2>
+#define ai2 array<int,2>
+#define ai array<int,3>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>factor(int n){
@@ -121,55 +122,55 @@ for (int i = 2; i * i <= n; i++) {
 
 /*------------------------------------begin------------------------------------
 
+we can run Dijkstra's and modify our distance array slightly to
+track whether the discount has been used or not.
+
+dist[i][false] will represent the shortest distance from the start node
+to node i, without using the discount. 
+
+dist[i][true] will represent
+the shortest distance after using the discount.
+
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+auto fun(){}
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vector<vector<ai2>>g(n+1,vector<ai2>());
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,wt);
+        g[x].pb({y,wt});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
+    priority_queue<ai,vector<ai>,cmparr>pq;// cost, vertx, max
+    vvi cost(n+1,vi(2,1e18));// 0 -> without discount, 1 -> with discount
+    pq.push({0,1,0});
+    cost[1]={0,0};
+    while(!pq.empty()){
+        auto x=pq.top();
+        pq.pop();
+        int c=x[0],r=x[1],isPowerUsed=x[2];
+        if(c!=cost[r][isPowerUsed])continue;
+        if(r==n)break;
+        for(auto i:g[r]){
+            int vertx=i[0],wt=i[1];
+            // if power is not used till yet, try using it
+            if(!isPowerUsed){
+                int tempCost=c+wt/2;
+                if(tempCost<cost[vertx][1]){
+                    cost[vertx][1]=tempCost;
+                    pq.push({tempCost,vertx,1});
                 }
             }
-            comp.clear();
+            // if power is used/ not used -> taking step forwd
+            if(c+wt<cost[vertx][isPowerUsed]){
+                cost[vertx][isPowerUsed]=c+wt;
+                pq.push({c+wt,vertx,isPowerUsed});
+            }
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    pn(cost[n][1]);
 }
 
 /*-------------------------------------end-------------------------------------*/

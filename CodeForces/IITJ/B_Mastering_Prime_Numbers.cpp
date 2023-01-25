@@ -108,74 +108,155 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-int n;
-vector<bool> is_prime(n+1, true);
-is_prime[0] = is_prime[1] = false;
-for (int i = 2; i * i <= n; i++) {
-    if (is_prime[i]) {
-        for (int j = i * i; j <= n; j += i)
-            is_prime[j] = false;
-    }
-}
 */
 
 /*------------------------------------begin------------------------------------
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+/*------------------------------------begin------------------------------------*/
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
-void solve()
-{
-    in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
-    ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+
+/*------------------------ Segment Tree Template begin ------------------------*/
+
+template<typename Node,typename Update>
+struct SegTree{
+    int n;
+    vector<int>arr;
+    vector<Node>tree;
+    SegTree(int a_len,vector<int>&a){
+        arr=a;
+        n=a_len;
+        int s=1;
+        while(s<2*n){
+            s=s<<1;
         }
+        tree.resize(s);
+        fill(all(tree),Node());//starting m all Nodes will have indentity value
+        build_tree(0,n-1,1);
     }
-    ffor(i,1,n+1)pt(ans[i]);
-}
+    void build_tree(int l,int r,int indx){
+        if(l==r){
+            tree[indx]=Node(arr[l],l);
+            return;
+        }
+        int mid=(l+r)/2;
+        build_tree(l,mid,2*indx);
+        build_tree(mid+1,r,2*indx+1);
+        tree[indx].merge(tree[2*indx],tree[2*indx+1]);
+    }
+    Node query(int l,int r,int indx,int qLeft,int qRight){
+        if(l>=qLeft&&r<=qRight){
+            return tree[indx];
+        }
+        if(l>qRight||r<qLeft){
+            return Node();
+        }
+        Node left,right,ans;
+        int mid=(l+r)/2;
+        left=query(l,mid,2*indx,qLeft,qRight);
+        right=query(mid+1,r,2*indx+1,qLeft,qRight);
+        ans.merge(left,right);
+        return ans;
+    }
+    void update(int l, int r, int indx, int qIndx, Update&u){
+        if(l==r){
+            u.apply(tree[indx]);
+            return;
+        }
+        int mid=(l+r)/2;
+        if(mid>=qIndx){
+            update(l,mid,2*indx,qIndx,u);
+        }else{
+            update(mid+1,r,2*indx+1,qIndx,u);
+        }
+        tree[indx].merge(tree[2*indx],tree[2*indx+1]);
+    }
+    void make_update(int indx,int val){
+        Update new_update=Update(val);
+        update(0,n-1,1,indx,new_update);
+    }
+    Node make_query(int left,int right){
+        return query(0,n-1,1,left,right);
+    }
+
+};
+struct Node1{
+    int val;
+    int indx;
+    Node1(){ //used during initialization and used for identity elemnt
+        val=0; // -> may change
+        indx=0;
+    }
+    Node1(int value,int i){ //building new nodes with this value
+        val=value; // -> may change
+        indx=i; // -> may change
+    }
+    void merge(Node1&l,Node1&r){ // l and r are child nodes
+        val = max(l.val , r.val);  // -> may change
+        if(l.val>=r.val){
+            indx=l.indx;
+        }else indx=r.indx;
+    }
+};
+struct Update1{
+    int val; //store the value which was recieved during update call
+    Update1(int value){ 
+        val=value;
+    }
+    void apply(Node1&a){//applying update to given node
+        a.val=val;
+    }
+};
+
+/*------------------------- Segment Tree Template end -------------------------*/
+
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    solve();
+    int t;
+    cin>>t;
+
+    int n=1000004;
+    vi A(n+1, 1);
+    A[0] = A[1] = 0;
+    for (int i = 2; i * i <= n; i++) {
+        if (A[i]) {
+            for (int j = i * i; j <= n; j += i)
+                A[j] = 0;
+        }
+    }
+    vi dp(n+1, 0);
+    ffor(i,1,n){
+        if(A[i])dp[i]=0;
+        else dp[i]=dp[i-1]+1;
+    }
+    SegTree<Node1,Update1>seg(n+1,dp);
+
+
+    while(t--)
+    {
+        in2(l,r);
+        l++;r--;
+        if(l>r){
+            pn(0);
+            continue;
+        }
+        auto x=seg.make_query(l,r);
+        if(!dp[l]){
+            pn(x.val);
+        }else{
+            int j=x.indx-x.val+1;
+            if(j>=l)pn(x.val);
+            else{
+                int z=dp[x.indx]-dp[l]+1;
+                auto y=seg.make_query(x.indx+1,r);
+                pn(max(y.val,z));
+            }
+        }
+    }
+    
     return 0;
 }

@@ -123,59 +123,40 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
+int dp[200005];
+void fun(){
+    mem(dp,0);
+    dp[1]=1;
+    dp[2]=2;
+    dp[3]=3;
+    int s=6;
+    for(int i=4;i<=200001;i++){
+        dp[i]=modadd(dp[i-1],dp[i-2]);
+        dp[i]=modadd(dp[i],dp[i-3]);
+        if(i%2==0){
+            dp[i]=modadd(dp[i],4);
+        }
+        else dp[i]=modadd(dp[i],5);
     }
 }
 void solve()
 {
-    in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
-    ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
-        }
-    }
-    ffor(i,1,n+1)pt(ans[i]);
+    in(n);
+    pn(dp[n]);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    solve();
+    int t;
+    cin>>t;
+    fun();
+    while(t--)
+    {
+        solve();
+    }
+    
     return 0;
 }

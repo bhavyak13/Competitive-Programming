@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -123,53 +123,51 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+vvi g,rg;
+vi vis,prnt,topo;
 
 void dfs(int r){
     vis[r]=1;
     for(auto i:g[r]){
         if(!vis[i])dfs(i);
     }
-    st.pb(r);
+    topo.pb(r);
 }
-void dfs2(int r){
+
+void dfs2(int r,int num){
     vis[r]=1;
-    comp.pb(r);
+    prnt[r]=num;
     for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
+        if(!vis[i])dfs2(i,num);
     }
 }
+
 void solve()
 {
     in2(n,m);
     g.assign(n+1,vi());
     rg.assign(n+1,vi());
-    vis.assign(n+1,0);
     ffor(i,0,m){
         in2(x,y);
         g[x].pb(y);
         rg[y].pb(x);
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
+    topo.clear();
     vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+    ffor(i,1,n+1)if(!vis[i])dfs(i);
+    reverse(all(topo));
+    vis.assign(n+1,0);
+    prnt.assign(n+1,-1);
+    int num=0;
+    for(auto i:topo){
+        if(!vis[i]){
+            num++;
+            dfs2(i,num);
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    pn(num);
+    ffor(i,1,n+1)pt(prnt[i]);
+
 }
 
 /*-------------------------------------end-------------------------------------*/

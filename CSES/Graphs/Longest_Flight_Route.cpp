@@ -61,7 +61,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
 #define Y "YES" 
-#define N "NO" 
+#define N "IMPOSSIBLE" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -121,55 +121,59 @@ for (int i = 2; i * i <= n; i++) {
 
 /*------------------------------------begin------------------------------------
 
+idea : do topo sort 
+then for all vertices before N, 
+calculate the maximum distance to reach certain vertices...
+
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
+vector<vector<int>>g;
+vi vis,topo;
+void fun(int n){
+    vis[n]=1;
+    for(auto i:g[n]){
+        if(!vis[i])fun(i);
     }
-    st.pb(r);
+    topo.pb(n);
 }
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
+
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    g.assign(n+1,vector<int>());
     ffor(i,0,m){
         in2(x,y);
         g[x].pb(y);
-        rg[y].pb(x);
-    }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
     }
     vis.assign(n+1,0);
-    ans.assign(n+1,0);
+    topo.clear();
     ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+        if(!vis[i])fun(i);
+    }
+    reverse(all(topo));
+    vi dp(n+1,-1e18);
+    vi prnt(n+1,-1);
+    dp[1]=1;
+    for(auto r:topo){
+        if(r==n)break;
+        for(auto i:g[r]){
+            if(dp[i]<dp[r]+1){
+                dp[i]=dp[r]+1;
+                prnt[i]=r;
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    if(dp[n]<0)pn(N);
+    else{
+        vi ans;
+        pn(dp[n]);
+        for(int r=n;r!=-1;r=prnt[r]){
+            ans.pb(r);
+        }
+        reverse(all(ans));
+        for(auto i:ans)pt(i);
+    }
 }
 
 /*-------------------------------------end-------------------------------------*/

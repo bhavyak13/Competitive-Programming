@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -11,7 +11,7 @@
 #include <functional>
 using namespace __gnu_pbds;
 using namespace std;
-typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_set;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>ordered_unordered_set;
 
 //input full vector
 template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e : V)is >> e;return is;}
@@ -32,8 +32,8 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define ss second
 #define T true
 #define F false
-#define mem(x, y) memset(x, y, sizeof(x))
-#define sp(x) cout << fixed;cout << setprecision(x)
+#define mem(x, y) memunordered_set(x, y, sizeof(x))
+#define sp(x) cout << fixed;cout << unordered_setprecision(x)
 #define sz size()
 #define mahadev ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define PI 3.14159265358979323846
@@ -123,30 +123,49 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+vvi g,rg;
+vector<unordered_set<int>>sccg;
+vi topo, vis, prnt, sccgCost, price;
 
 void dfs(int r){
     vis[r]=1;
     for(auto i:g[r]){
         if(!vis[i])dfs(i);
     }
-    st.pb(r);
+    topo.pb(r);
 }
-void dfs2(int r){
+
+void dfs2(int r,int num){
     vis[r]=1;
-    comp.pb(r);
+    prnt[r]=num;
     for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
+        if(!vis[i])dfs2(i,num);
     }
+    sccgCost[num]+=price[r-1];
 }
+
+void dfs3(int r){
+    vis[r]=1;
+    for(auto i:sccg[r]){
+        if(!vis[i])dfs3(i);
+    }
+    topo.pb(r);
+}
+
 void solve()
 {
     in2(n,m);
+    price.resize(n);
+    cin>>price;
+
     g.assign(n+1,vi());
     rg.assign(n+1,vi());
     vis.assign(n+1,0);
+    prnt.assign(n+1,-1);
+    sccg.assign(n+1,unordered_set<int>());
+    sccgCost.assign(n+1,0);
+
+    // kosaraju algo
     ffor(i,0,m){
         in2(x,y);
         g[x].pb(y);
@@ -155,21 +174,43 @@ void solve()
     ffor(i,1,n+1){
         if(!vis[i])dfs(i);
     }
+    reverse(all(topo));
+    
     vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
-            }
-            comp.clear();
+    int num=0;
+    for(auto i:topo){
+        if(!vis[i]){
+            num++;
+            dfs2(i,num);
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+
+    // condensed graph
+    ffor(x,1,n+1){
+        int p=prnt[x];
+        for(auto i:g[x]){
+            if(prnt[i]!=p){
+                sccg[p].insert(prnt[i]);
+            }
+        }
+    }
+
+    // dp to find path with MAX price in DAG
+    // toposort
+    topo.clear();
+    vis.assign(n+1,0);
+    ffor(i,1,num+1){
+        if(!vis[i])dfs3(i);
+    }
+    reverse(all(topo));
+
+    vi dp=sccgCost;
+    for(auto r:topo){
+        for(auto i:sccg[r]){
+            dp[i]=max(dp[i],sccgCost[i]+dp[r]);
+        }
+    }
+    pn(*max_element(all(dp)));
 }
 
 /*-------------------------------------end-------------------------------------*/
@@ -177,5 +218,18 @@ signed main()
 {
     mahadev;
     solve();
+    
     return 0;
 }
+
+/*
+
+1 2 3 4 5 6 7 8 9 10
+2 5 7 2 1 4 6 7 5 5 
+3 3 2 3 3 1 3 3 3 3 
+
+1 -> 4
+2 -> 7
+3 -> 33
+
+*/

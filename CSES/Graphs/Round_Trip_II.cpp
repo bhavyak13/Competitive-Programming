@@ -120,56 +120,57 @@ for (int i = 2; i * i <= n; i++) {
 */
 
 /*------------------------------------begin------------------------------------
-
+ 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
 
-void dfs(int r){
+// detect cycle in directed graph..
+vector<int>vis,tvis,temp;
+vvi g;
+
+bool dfs(int r){
+    // pt(r);
+    tvis[r]=1;
     vis[r]=1;
+    temp.pb(r);
     for(auto i:g[r]){
-        if(!vis[i])dfs(i);
+        if(tvis[i]==1){//cycle detected
+            temp.pb(i);
+            return false;
+        }else if(!vis[i])if(!dfs(i))return false;
     }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
+    tvis[r]=0;
+    temp.pop_back();
+    return true;
 }
 void solve()
 {
     in2(n,m);
     g.assign(n+1,vi());
-    rg.assign(n+1,vi());
     vis.assign(n+1,0);
+    tvis.assign(n+1,0);
     ffor(i,0,m){
         in2(x,y);
         g[x].pb(y);
-        rg[y].pb(x);
     }
     ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+        if(!vis[i]&&!dfs(i)){
+            vi ans;
+            int e=temp.back();
+            temp.pop_back();
+            while(temp.back()!=e){
+                ans.pb(temp.back());
+                temp.pop_back();
             }
-            comp.clear();
+            pn(ans.sz+2);
+            pt(temp.back());
+            reverse(all(ans));
+            for(auto i:ans)pt(i);
+            pt(temp.back());
+            return;
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    pn("IMPOSSIBLE");
 }
 
 /*-------------------------------------end-------------------------------------*/

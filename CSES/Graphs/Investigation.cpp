@@ -75,7 +75,8 @@ bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 // priority_queue of pairs (min) 
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
-#define ai array<int,2>
+#define ai2 array<int,2>
+#define ai array<int,3>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>factor(int n){
@@ -123,53 +124,41 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
+auto fun(){}
 
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
-        if(!vis[i])dfs(i);
-    }
-    st.pb(r);
-}
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
-        if(!vis[i])dfs2(i);
-    }
-}
 void solve()
 {
     in2(n,m);
-    g.assign(n+1,vi());
-    rg.assign(n+1,vi());
-    vis.assign(n+1,0);
+    vector<vector<ai2>>g(n+1,vector<ai2>());
     ffor(i,0,m){
-        in2(x,y);
-        g[x].pb(y);
-        rg[y].pb(x);
+        in3(x,y,cost);
+        g[x].pb({y,cost});
     }
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    vis.assign(n+1,0);
-    ans.assign(n+1,0);
-    ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+    priority_queue<ai,vector<ai>,cmparr>pq;// cost,root,steps
+    vi cost(n+1,1e18),mxStep(n+1,-1e18),mnStep(n+1,1e18),ways(n+1,0);
+    cost[1]=0;ways[1]=1;mxStep[1]=0;mnStep[1]=0;
+    pq.push({0,1,0});
+    while(!pq.empty()){
+        auto x=pq.top();
+        pq.pop();
+        int c=x[0],r=x[1],steps=x[2];
+        if(cost[r]!=c)continue;
+        for(auto i:g[r]){
+            int tc=c+i[1],v=i[0];
+            if(cost[v]>tc){
+                cost[v]=tc;
+                pq.push({tc,v,steps+1});
+                ways[v]=ways[r];
+                mnStep[v]=mnStep[r]+1;
+                mxStep[v]=mxStep[r]+1;
+            }else if(cost[v]==tc){
+                ways[v]=(ways[v]+ways[r])%mod;
+                mnStep[v]=min(mnStep[v],mnStep[r]+1);
+                mxStep[v]=max(mxStep[v],mxStep[r]+1);
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    pt4(cost[n],ways[n],mnStep[n],mxStep[n]);
 }
 
 /*-------------------------------------end-------------------------------------*/

@@ -3,7 +3,7 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : BhavyaKawatra13
+ CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -123,54 +123,77 @@ for (int i = 2; i * i <= n; i++) {
 
 */
 
-vvi rg,g;
-vi vis,st;
-vi comp,ans;
-
-void dfs(int r){
-    vis[r]=1;
-    for(auto i:g[r]){
+// KOSARAJU ALGORITHM
+ 
+vvi g,rg;
+vi vis,topo,ok;
+void dfs(int v){
+    vis[v]=1;
+    for(auto i:g[v]){
         if(!vis[i])dfs(i);
     }
-    st.pb(r);
+    topo.pb(v);
 }
-void dfs2(int r){
-    vis[r]=1;
-    comp.pb(r);
-    for(auto i:rg[r]){
+ 
+vi tmp;
+void dfs2(int v){
+    vis[v]=1;
+    for(auto i:rg[v]){
         if(!vis[i])dfs2(i);
     }
+    tmp.pb(v);
 }
+void dfs3(int v){
+    vis[v]=1;
+    ok[v]=1;
+    for(auto i:rg[v]){
+        if(!vis[i])dfs3(i);
+    }
+}
+ 
 void solve()
 {
     in2(n,m);
     g.assign(n+1,vi());
     rg.assign(n+1,vi());
-    vis.assign(n+1,0);
     ffor(i,0,m){
         in2(x,y);
         g[x].pb(y);
         rg[y].pb(x);
     }
+ 
+    vis.assign(n+1,0);
+    topo.clear();
     ffor(i,1,n+1){
         if(!vis[i])dfs(i);
     }
+    reverse(all(topo));
+    
     vis.assign(n+1,0);
-    ans.assign(n+1,0);
+    ok.assign(n+1,0);
     ffor(i,1,n+1){
-        int u=st[n-i];
-        if(!vis[u]){
-            dfs2(u);
-            if(comp.sz>1){
-                for(auto e:comp){
-                    ans[e]=1;
-                }
+        tmp.clear();
+        if(!vis[topo[i-1]]){
+            dfs2(topo[i-1]);
+            if(tmp.sz>1){
+                for(auto i:tmp)ok[i]=1;
             }
-            comp.clear();
         }
     }
-    ffor(i,1,n+1)pt(ans[i]);
+    vis.assign(n+1,0);
+    ffor(i,1,n+1){
+        if(ok[i]){
+            dfs3(i);
+        }
+    }
+    int c=0;
+    ffor(i,1,n+1){
+        // pt(ok[i]);
+        c+=ok[i];
+    }
+    pn(c);
 }
+ 
 
 /*-------------------------------------end-------------------------------------*/
 signed main()

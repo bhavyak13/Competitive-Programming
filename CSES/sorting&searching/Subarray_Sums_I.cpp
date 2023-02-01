@@ -78,7 +78,7 @@ struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{re
 #define ai array<int,2>
 struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
-vector<int>prime_factors(int n){
+vector<int>factor(int n){
     vector<int>ans;
     if(!(n%2))ans.push_back(2);
     while(!(n%2))n/=2;
@@ -118,7 +118,6 @@ for (int i = 2; i * i <= n; i++) {
     }
 }
 */
-// sum = xor + (2 * and)
 
 /*------------------------------------begin------------------------------------
 
@@ -128,48 +127,35 @@ auto fun(){}
 
 void solve()
 {
-    in(n);
-    if(n%1){
-        pn(-1);
-        return;
+    in2(n,s);
+    vi a(n);
+    cin>>a;
+    unordered_map<int,int>m;
+    m[0]=1;
+    int ans=0,pre=0;
+    for(auto i:a){
+        pre+=i;
+        m[pre]++;
+        if(m.find(pre-s)!=m.end())ans++;
     }
-    int a=n,b=0;
-    bfor(i,31,0){
-        if(((1<<i)&n))continue;
-        if( ((2*n)-a-b) >= (1<<i) ){
-            a+=(1<<i);
-            b+=(1<<i);
-        }
-    }
-    if((a^b==n)&&(a+b==2*n))pt2(a,b);
-    else pn(-1);
-
+    pn(ans);
 }
 
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    int t;
-    cin>>t;
-    
-    while(t--)
-    {
-        solve();
-    }
-    
+    solve();
     return 0;
 }
 
 
-
-// /*
 //     Author : Bhavya Kawatra
 //  Institute : MAIT
 //       Dept : CST
 //      Email : bhavyakawatra6@gmail.com
 //  CF handle : bhavyakawatra
-// */
+
 // #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
@@ -292,25 +278,24 @@ signed main()
 
 // void solve()
 // {
-//     in(n);
-//     int a=3*n/2;
-//     int b=n/2;
-//     if((a+b==2*n)&&((a^b)==n))pt2(a,b);
-//     else pn(-1);
+//     in2(n,s);
+//     vi a(n);
+//     cin>>a;
+//     unordered_map<int,int>m;
+//     m[0]=1;
+//     int ans=0,pre=0;
+//     for(auto i:a){
+//         pre+=i;
+//         ans+=m[pre-s];
+//         m[pre]++;
+//     }
+//     pn(ans);
 // }
 
 // /*-------------------------------------end-------------------------------------*/
 // signed main()
 // {
 //     mahadev;
-//     int t;
-//     cin>>t;
-    
-//     while(t--)
-//     {
-//         solve();
-//     }
-    
+//     solve();
 //     return 0;
 // }
-

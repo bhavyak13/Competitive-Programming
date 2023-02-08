@@ -108,36 +108,18 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
     }
 }
 
-*/
-// sum = xor + (2 * and)
 
-/*------------------------------------begin------------------------------------
-
-*/
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
-
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
-
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
+// factorize using seive
 
 int N=10000007;
 vi spf;
@@ -162,29 +144,18 @@ vi factorize(int n){
     }
     return ans;
 }
+*/
+// sum = xor + (2 * and)
+
+/*------------------------------------begin------------------------------------
+
+*/
 
 auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
-    }
-    if(gcd(l,r)!=1){
-        pn(0);return;
-    }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
-    }
-    pn(ans);
+    
 }
 
 /*-------------------------------------end-------------------------------------*/
@@ -193,13 +164,34 @@ signed main()
     mahadev;
     int t;
     cin>>t;
-    
-    // seive;
-    seive();
 
+    int N=1e6+5;
+    int bari=1;
+    vi A(N+5,0);
+    vi B(N+5,0);
+    A[1]=1;
+    int cnt=0,curr=2,step=2;
+    ffor(i,2,N+1){
+        if(!curr){
+            step++;
+            curr=step;
+            cnt++;
+            if(cnt==2){
+                cnt=0;
+                bari=1-bari;
+            }
+        }
+        A[i]=A[i-1];
+        B[i]=B[i-1];
+        if(bari)B[i]++;
+        else A[i]++;
+        curr--;
+    }
+    
     while(t--)
     {
-        solve();
+        in(x);
+        pt2(A[x],B[x]);
     }
     
     return 0;

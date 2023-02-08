@@ -61,7 +61,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define bfor(i, a, b) for (int i = a - 1; i >= b; i--)
 #define all(v) v.begin(),v.end()
 #define Y "YES" 
-#define NO "NO" 
+#define N "NO" 
 #define int long long
 int gcd(int a, int b){if (b == 0)return a;return gcd(b, a % b);}
 int count_digit(int n){int c = 0;while (n > 0){c++;n /= 10;}return c;}
@@ -108,82 +108,68 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
     }
 }
-
 */
 // sum = xor + (2 * and)
 
 /*------------------------------------begin------------------------------------
 
 */
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
 
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
+// possibilities = uCx -> x -> min(u,k);
+string a,b;
+int n,k,U,ans,X;
+vi uniqueCharacters;
+int temp[26];
 
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
-
-int N=10000007;
-vi spf;
-void seive(){
-    spf.assign(N+1,1);
-    for (int i = 2; i <= N; i++) {
-        if (spf[i]==1) {// if i is prime
-            spf[i]=i;
-            for (int j = i * i; j <= N; j += i)
-                if(spf[j]==1)spf[j] = i;
+void check(){
+    int c=0,t=0;
+    ffor(i,0,n){
+        if(a[i]==b[i]||temp[a[i]-'a'])t++;
+        else {
+            c+=t*(t+1)/2;
+            t=0;
         }
     }
+    c+=t*(t+1)/2;
+    ans=max(ans,c);
 }
-vi factorize(int n){
-    vi ans;
-    while(n>1){
-        int fact=spf[n];
-        ans.pb(fact);
-        while(n%fact==0){
-            n/=fact;
-        }
+void fun(int indx,int cntr){
+    if(cntr==X){
+        check();
+        return;
     }
-    return ans;
+    for(int i=indx;i<U;i++){
+        temp[uniqueCharacters[i]]=1;
+        fun(i+1,cntr+1);
+        temp[uniqueCharacters[i]]=0;
+    }
 }
-
-auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
+    cin>>n>>k>>a>>b;
+    int freq[26]{0};
+    memset(temp,0,sizeof(temp));
+    uniqueCharacters.clear();
+    ans=0;
+    for(auto i:a)freq[i-'a']++;
+    ffor(i,0,26){
+        if(freq[i]){
+            uniqueCharacters.pb(i);
+        }
     }
-    if(gcd(l,r)!=1){
-        pn(0);return;
-    }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
-    }
+    U=uniqueCharacters.sz;
+    X=min(k,U);
+    fun(0,0);
     pn(ans);
 }
 
@@ -194,9 +180,6 @@ signed main()
     int t;
     cin>>t;
     
-    // seive;
-    seive();
-
     while(t--)
     {
         solve();

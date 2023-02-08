@@ -108,36 +108,18 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
     }
 }
 
-*/
-// sum = xor + (2 * and)
 
-/*------------------------------------begin------------------------------------
-
-*/
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
-
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
-
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
+// factorize using seive
 
 int N=10000007;
 vi spf;
@@ -162,27 +144,37 @@ vi factorize(int n){
     }
     return ans;
 }
+*/
+// sum = xor + (2 * and)
+
+/*------------------------------------begin------------------------------------
+
+*/
 
 auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
+    in(n);
+    string s;
+    cin>>s;
+    vi pre(n+5),suff(n+5);
+    map<int,int>m;
+    ffor(i,0,n){
+        m[s[i]]++;
+        pre[i]=m.sz;
     }
-    if(gcd(l,r)!=1){
-        pn(0);return;
+    m.clear();
+    for(int i=n-1;i>=0;i--){
+        m[s[i]]++;
+        suff[i]=m.sz;
+        // pt(suff[i]);
     }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
+        // cout<<endl;
+    int ans=0;
+    ffor(i,0,n-1){
+        // pt(pre[i]);
+        ans=max(ans,pre[i]+suff[i+1]);
     }
     pn(ans);
 }
@@ -194,9 +186,6 @@ signed main()
     int t;
     cin>>t;
     
-    // seive;
-    seive();
-
     while(t--)
     {
         solve();

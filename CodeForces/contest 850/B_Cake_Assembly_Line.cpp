@@ -1,10 +1,4 @@
-/*
-    Author : Bhavya Kawatra
- Institute : MAIT
-      Dept : CST
-     Email : bhavyakawatra6@gmail.com
- CF handle : bhavyakawatra
-*/
+
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -108,36 +102,18 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
     }
 }
 
-*/
-// sum = xor + (2 * and)
 
-/*------------------------------------begin------------------------------------
-
-*/
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
-
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
-
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
+// factorize using seive
 
 int N=10000007;
 vi spf;
@@ -162,29 +138,43 @@ vi factorize(int n){
     }
     return ans;
 }
+*/
+// sum = xor + (2 * and)
+
+/*------------------------------------begin------------------------------------
+
+*/
 
 auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
+    in3(n,w,h);
+    vi a(n);
+    vi b(n);
+    cin>>a>>b;
+    if(n==1){
+        pn(Y);return;
     }
-    if(gcd(l,r)!=1){
-        pn(0);return;
+    int l=0,r=1e18,diff=0;
+    ffor(i,1,n){
+        diff+=b[i]-b[i-1];
+        int e=a[i];
+        // e-> 95
+        int leftp=e-w;
+        int rightp=e+w;
+        int firstAcc=leftp+h;
+        int lastAcc=rightp-h;
+        // pt2(firstAcc-diff,lastAcc-diff);
+        l=max(l,firstAcc-diff);
+        r=min(r,lastAcc-diff);
     }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
-    }
-    pn(ans);
+    int e=a[0];
+    int leftp=e-w+h;
+    int rightp=e+w-h;
+    // pt2(l,r);
+    if((l<=r)&&((l>=leftp&&l<=rightp)||(r>=leftp&&r<=rightp)))pn(Y);
+    else pn(NO);
 }
 
 /*-------------------------------------end-------------------------------------*/
@@ -194,9 +184,6 @@ signed main()
     int t;
     cin>>t;
     
-    // seive;
-    seive();
-
     while(t--)
     {
         solve();

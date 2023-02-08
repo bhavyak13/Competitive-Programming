@@ -1,10 +1,4 @@
-/*
-    Author : Bhavya Kawatra
- Institute : MAIT
-      Dept : CST
-     Email : bhavyakawatra6@gmail.com
- CF handle : bhavyakawatra
-*/
+
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -105,84 +99,27 @@ int binExpo(int a,int b){
 // for prime modulus m : (a^(m-2) = a^-1) mod m
 int inv(int a){return binExpo(a,mod-2);}
 
-
-// Sieve of Eratosthenes
-/*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
-    }
-}
-
-*/
-// sum = xor + (2 * and)
-
 /*------------------------------------begin------------------------------------
 
 */
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
-
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
-
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
-
-int N=10000007;
-vi spf;
-void seive(){
-    spf.assign(N+1,1);
-    for (int i = 2; i <= N; i++) {
-        if (spf[i]==1) {// if i is prime
-            spf[i]=i;
-            for (int j = i * i; j <= N; j += i)
-                if(spf[j]==1)spf[j] = i;
-        }
-    }
-}
-vi factorize(int n){
-    vi ans;
-    while(n>1){
-        int fact=spf[n];
-        ans.pb(fact);
-        while(n%fact==0){
-            n/=fact;
-        }
-    }
-    return ans;
-}
 
 auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
-    }
-    if(gcd(l,r)!=1){
-        pn(0);return;
-    }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
+    in(n);
+    vi a(n);
+    cin>>a;
+    sort(all(a));
+    int ans=0;
+    int cntr=1,f=0;
+    for(int i=0;i<n;i++){
+        if(a[i]==cntr)f=1;
+        else if(f){f=0;cntr++;i--;}
+        else{
+            f=1;
+            ans+=a[i]-cntr;
+        }
     }
     pn(ans);
 }
@@ -194,9 +131,6 @@ signed main()
     int t;
     cin>>t;
     
-    // seive;
-    seive();
-
     while(t--)
     {
         solve();

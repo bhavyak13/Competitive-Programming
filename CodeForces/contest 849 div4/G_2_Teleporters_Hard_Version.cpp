@@ -5,6 +5,7 @@
      Email : bhavyakawatra6@gmail.com
  CF handle : bhavyakawatra
 */
+
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -75,8 +76,14 @@ bool cmp2(pair<int,int>& a,pair<int, int>& b){return a.second < b.second;}
 // priority_queue of pairs (min) 
 #define pi pair<int,int>
 struct cmp {constexpr bool operator()(pi const& a, pi const& b)const noexcept{return a.first > b.first;}};
-#define ai array<int,2>
-struct cmparr {constexpr bool operator()(ai const& a, ai const& b)const noexcept{return a[0] > b[0];}};
+#define ai array<int,3>
+struct cmparr {constexpr bool operator()(ai const& a, ai const& b)
+const noexcept{
+    if(a[0]==b[0])return a[2]>b[2];
+    return a[0] > b[0];
+
+    
+    }};
 int intfloordiv(int x,int y){if(x>=0)return x/y;else return (x-y+1)/y;}
 vector<int>prime_factors(int n){
     vector<int>ans;
@@ -108,36 +115,18 @@ int inv(int a){return binExpo(a,mod-2);}
 
 // Sieve of Eratosthenes
 /*
-
-vector<bool> is_prime;
-int N=100005;
-void seive(){
-    is_prime.assign(N+1, true);
-    is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i * i <= N; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= N; j += i)
-                is_prime[j] = false;
-        }
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
     }
 }
 
-*/
-// sum = xor + (2 * and)
 
-/*------------------------------------begin------------------------------------
-
-*/
-// we can iterate over all g and find min k but each query will take NlogN time
-// N=1e7 ; prime factors:  NlogN possible i.e. g can take NlogN values..
-// hence we go by diff method
-
-// we cant find prime factor by line81 method coz it will take sqrt(Y-X)*Q time
-// where Q=1e6, and sqrt(Y-X)'s upperbound is 1e3-1e4
-// y-x -> 1e7
-
-// we'll now do querys in log(Y-X) time which is better thn sqrt(Y-X)
-// for this we'll factorize using seive
+// factorize using seive
 
 int N=10000007;
 vi spf;
@@ -162,27 +151,72 @@ vi factorize(int n){
     }
     return ans;
 }
+*/
+// sum = xor + (2 * and)
+
+/*------------------------------------begin------------------------------------
+
+*/
 
 auto fun(){}
 
 void solve()
 {
-    in2(l,r);
-    if(l>r)swap(l,r);
-    if((r-l)==1){
-        pn(-1);return;
+    in2(n,m);
+    int M=m;
+    vi a(n);
+    cin>>a;
+    priority_queue<ai,vector<ai>,cmparr>pq;
+    vi A(n),B(n);
+    ffor(i,0,n){
+        int x=i+1+a[i];
+        A[i]=x;
+        pq.push({x,i,1});
     }
-    if(gcd(l,r)!=1){
-        pn(0);return;
+    for(int i=n-1,j=1;i>=0;i--,j++){
+        int x=j+a[i];
+        B[i]=x;
+        pq.push({x,i,2});
     }
-    // gcd(l+k,r+k)=g;
-    // gcd(l+k,r-l)=g;
-    vi f=factorize(r-l);
-    int ans=1e18;
-    for(auto g:f){
-        int rem=l%g;
-        int extra=g-rem;
-        ans=min(ans,extra);
+    vi vis(n+1,0);
+    int ans=0;
+    int c=0,f=0;
+    while(!pq.empty()){
+        auto x=pq.top();
+        pq.pop();
+        int mon=x[0],indx=x[1];
+        if(vis[indx])continue;
+        if(m>=mon)m-=mon;
+        else break;
+        vis[indx]=1;
+        ans++;
+        if(x[2]==1)f=1;
+    }
+    // pn(ans);
+    int currMoney=m;
+    if(!f&&ans){// if no element from A is selected..
+        // switch btw A and B
+        ffor(i,0,n){
+            if(vis[i]&&(A[i]-B[i]<=currMoney)){
+                pn(ans);return;
+            }
+        }
+        // if switch is not possible:
+        priority_queue<ai>pq2;// B -> visited
+        int minFromA=1e18;
+        ffor(i,0,n){
+            if(vis[i])pq2.push({B[i],i});
+            else minFromA=min(minFromA,A[i]);
+        }
+        while(ans>0&&!pq2.empty()){
+            auto x=pq2.top();
+            pq2.pop();
+            int mon=x[0],indx=x[1];
+            currMoney+=mon;
+            minFromA=min(minFromA,A[indx]);
+            if(currMoney>=minFromA)break;
+            ans--;
+        }
     }
     pn(ans);
 }
@@ -194,9 +228,6 @@ signed main()
     int t;
     cin>>t;
     
-    // seive;
-    seive();
-
     while(t--)
     {
         solve();
@@ -204,3 +235,33 @@ signed main()
     
     return 0;
 }
+
+/*
+
+2 case possible 
+
+either ans remains same
+
+B m s hatao aur A m s lelo
+ya to B ki direct replacememt A wale indx s krdo
+ya fir aisa choose kro jo 
+
+or ans reduces by 1
+
+
+5 4 3 3
+6 6 7 7
+9 7 5 4 
+
+
+1
+7 14
+
+100 4 100 100 1 2 4
+101 5 103 104 6 8 11
+107 10 105 104 4 4 5
+
+
+
+
+*/

@@ -19,7 +19,7 @@ template<class T>istream& operator >> (istream &is, vector<T>& V) {for(auto &e :
 #define db double
 #define im INT_MAX
 #define ll long long
-#define mod 1000000007
+#define mod 998244353
 #define mod2 998244353
 #define vi vector<int>
 #define vb vector<bool>
@@ -122,21 +122,39 @@ for (int i = 2; i * i <= n; i++) {
 /*------------------------------------begin------------------------------------
 
 */
-
-auto fun(){}
-
-void solve()
-{
-    in2(n,m);
-    vi a(n);
-    cin>>a;
-    
-}
-
 /*-------------------------------------end-------------------------------------*/
+int MAXN;
+vi factorial;
+long long binomial_coefficient(int n, int k) {
+    return factorial[n] * inv(factorial[k] * factorial[n - k] % mod) % mod;
+}
+void precomputeFactorials(){
+    MAXN=100006;// give max n here
+    factorial.assign(MAXN+5,1);
+    factorial[0] = 1;
+    for (int i = 1; i <= MAXN; i++) {
+        factorial[i] = factorial[i - 1] * i % mod;
+    }
+}
 signed main()
 {
     mahadev;
-    solve();
+    precomputeFactorials();
+    in(n);
+    vi a(n);
+    cin>>a;
+    int ans=1;
+    for(int i=0;i<n;i+=3){
+        vi A={a[i],a[i+1],a[i+2]};
+        dsort(A);
+        int c=1;
+        if(A[0]!=A[1]&&A[1]!=A[2])continue;
+        if(A[1]==A[2])c++;
+        if(A[0]==A[2])c++;
+        ans=(ans*c)%mod;
+    }
+    ans=(ans*binomial_coefficient(n/3,n/6))%mod;
+
+    pn(ans);
     return 0;
 }

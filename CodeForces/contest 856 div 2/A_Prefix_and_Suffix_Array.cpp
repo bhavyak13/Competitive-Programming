@@ -167,15 +167,6 @@ void precomputeFactorials(){
 
 */
 
-bool ok(string s){
-    int i=0,j=s.sz-1;
-    while(i<j){
-        if(s[i]!=s[j])return false;
-        i++;
-        j--;
-    }
-    return true;
-}
 
 void solve()
 {
@@ -202,7 +193,7 @@ void solve()
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
-    // mahadev;
+    mahadev;
     int t;
     cin>>t;
     

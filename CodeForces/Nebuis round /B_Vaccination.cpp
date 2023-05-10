@@ -3,7 +3,6 @@
  Institute : MAIT
       Dept : CST
      Email : bhavyakawatra6@gmail.com
- CF handle : bhavyakawatra
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -117,80 +116,101 @@ for (int i = 2; i * i <= n; i++) {
             is_prime[j] = false;
     }
 }
+
+
+// factorize using seive
+
+int N=10000007;
+vi spf;
+void seive(){
+    spf.assign(N+1,1);
+    for (int i = 2; i <= N; i++) {
+        if (spf[i]==1) {// if i is prime
+            spf[i]=i;
+            for (int j = i * i; j <= N; j += i)
+                if(spf[j]==1)spf[j] = i;
+        }
+    }
+}
+vi factorize(int n){
+    vi ans;
+    while(n>1){
+        int fact=spf[n];
+        ans.pb(fact);
+        while(n%fact==0){
+            n/=fact;
+        }
+    }
+    return ans;
+}
+*/
+// sum = xor + (2 * and)
+/*
+
+// NCR code
+int MAXN;
+vi factorial;
+long long binomial_coefficient(int n, int k) {
+    return factorial[n] * inv(factorial[k] * factorial[n - k] % mod) % mod;
+}
+void precomputeFactorials(){
+    MAXN=100006;// give max n here
+    factorial.assign(MAXN+5,1);
+    factorial[0] = 1;
+    for (int i = 1; i <= MAXN; i++) {
+        factorial[i] = factorial[i - 1] * i % mod;
+    }
+}
 */
 
 /*------------------------------------begin------------------------------------
 
 */
 
-
 auto fun(){}
 
-
-// KOSARAJU ALGORITHM
-
-int g[5005][5005];
-int  vis[5000],topo[5000],ok[5000];
-
-void dfs(int v){
-    vis[v]=1;
-    for(auto i:g[v]){
-        if(!vis[i])dfs(i);
-    }
-    topo.pb(v);
-}
- 
-vi tmp;
-void dfs2(int v){
-    vis[v]=1;
-    for(auto i:rg[v]){
-        if(!vis[i])dfs2(i);
-    }
-    tmp.pb(v);
-}
-
- 
-int solve(int n,int m,int e[][2])
+void solve()
 {
-    ffor(i,0,m){
-        int x=e[i][1],y=e[i][2];
-        g[x].pb(y);
-        rg[y].pb(x);
-    }
- 
-    vis.assign(n+1,0);
-    topo.clear();
-    ffor(i,1,n+1){
-        if(!vis[i])dfs(i);
-    }
-    reverse(all(topo));
-    
-    memset(vis,0,sizeof(vis));
-    memset(ok,0,sizeof(ok));
-
+    in4(n,k,d,w);
+    vi a(n);
+    cin>>a;
     int ans=0;
-    ffor(i,1,n+1){
-        tmp.clear();
-        if(!vis[topo[i-1]]){
-            dfs2(topo[i-1]);
-            if(tmp.sz>1){
-                ans=max(ans,(ll)tmp.sz);
-            }
-        }
+    // for (long long i = 0; i < n; i++){ // 0 1 2 3 n-3 n-2 n-1
+    //     if(i+1<n&&a[i+1]<=start+d)end=a[i+1];
+    //     if(i+2<n)end=a[i+2];
+    //     if()
+    // }
+    // k-> doses per box
+    // d->the number of moments of time the vaccine can live outside the fridge,
+    // w -> the number of moments of time each of the patients can wait
+    int i=0;
+    while(i<n){
+        int start=a[i],end=a[i];
+        int zinda=start+d;
+        // int maxPatientWhoCanTake=
+        int mxp=zinda+w;
+        auto itr=ub(a.begin()+i,a.end(),mxp);
+        itr=prev(itr);
+        int indx=itr-a.begin();
+        indx=min(indx,i+k-1);
+        i=indx+1;
+        ans++;
+        // pt2(start,indx);
     }
-    return ans;
+    pn(ans);
 }
+
 /*-------------------------------------end-------------------------------------*/
 signed main()
 {
     mahadev;
-    in2(n,m);
-    int f[13][2];
-    ffor(i,0,13){
-        in2(x,y);
-        f[i][0]=x;
-        f[i][1]=y;
+    int t;
+    cin>>t;
+    
+    while(t--)
+    {
+        solve();
     }
-    pn(solve(n,m,f));
+    
     return 0;
 }

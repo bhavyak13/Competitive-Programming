@@ -174,12 +174,12 @@ void solve()
     in(n);
     vi a(n);
     cin>>a;
-    for(int i=n-1;i>=1;i--){
-        // (a[i+1]%a[i]!=0)
-        if(a[i]<a[i-1])continue;
-        if(a[i+1]%a[i])continue;
-        
+    ffor(i,0,n)if(a[i]==1)a[i]++;
+    ffor(i,1,n){
+        if(a[i]%a[i-1]==0)a[i]++;
     }
+    ffor(i,0,n)pt(a[i]);
+    cout<<endl;
 }
 
 /*-------------------------------------end-------------------------------------*/
